@@ -8,6 +8,7 @@ import {
   signInWithPopup
 } from 'firebase/auth';
 import { auth } from '../lib/firebase';
+import { logFirebaseError } from '../lib/firebase-error-handler';
 
 interface AuthContextType {
   user: FirebaseUser | null;
@@ -33,12 +34,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const login = async (email: string, pass: string) => {
-    await signInWithEmailAndPassword(auth, email, pass);
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+    } catch (error) {
+      const message = logFirebaseError('login', error);
+      throw new Error(message);
+    }
   };
 
   const loginWithGoogle = async () => {
-    const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      const message = logFirebaseError('loginWithGoogle', error);
+      throw new Error(message);
+    }
   };
 
   const logout = async () => {

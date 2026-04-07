@@ -1,4 +1,5 @@
 import { db } from "../lib/firebase";
+import { logFirebaseError } from "../lib/firebase-error-handler";
 import { 
   collection, 
   doc, 
@@ -33,8 +34,8 @@ export const dataService = {
       
       return { success: true, id: timestampId };
     } catch (error) {
-      console.error("Error saving data to Firebase:", error);
-      throw error;
+      const message = logFirebaseError(`saveData(${collectionName})`, error);
+      throw new Error(message);
     }
   },
 
@@ -49,8 +50,8 @@ export const dataService = {
         id: doc.id
       }));
     } catch (error) {
-      console.error(`Error fetching collection ${collectionName}:`, error);
-      throw error;
+      const message = logFirebaseError(`getCollection(${collectionName})`, error);
+      throw new Error(message);
     }
   },
 
@@ -66,7 +67,8 @@ export const dataService = {
       }));
       callback(data);
     }, (error) => {
-      console.error(`Error subscribing to ${collectionName}:`, error);
+      const message = logFirebaseError(`subscribeToCollection(${collectionName})`, error);
+      console.error(message);
     });
   },
 
@@ -82,8 +84,8 @@ export const dataService = {
       }
       return null;
     } catch (error) {
-      console.error(`Error fetching document ${id} from ${collectionName}:`, error);
-      throw error;
+      const message = logFirebaseError(`getDocument(${collectionName}, ${id})`, error);
+      throw new Error(message);
     }
   },
 
@@ -99,8 +101,8 @@ export const dataService = {
       });
       return { success: true };
     } catch (error) {
-      console.error(`Error updating document ${id} in ${collectionName}:`, error);
-      throw error;
+      const message = logFirebaseError(`updateData(${collectionName}, ${id})`, error);
+      throw new Error(message);
     }
   },
 
@@ -113,8 +115,8 @@ export const dataService = {
       await deleteDoc(docRef);
       return { success: true };
     } catch (error) {
-      console.error(`Error deleting document ${id} from ${collectionName}:`, error);
-      throw error;
+      const message = logFirebaseError(`deleteData(${collectionName}, ${id})`, error);
+      throw new Error(message);
     }
   },
 
