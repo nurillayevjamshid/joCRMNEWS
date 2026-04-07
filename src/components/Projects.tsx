@@ -1,81 +1,17 @@
-import React, { useState } from 'react';
-import { Search, Filter, Plus, MoreHorizontal, Clock } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, Filter, Plus, MoreHorizontal, Clock, Loader2 } from 'lucide-react';
+import { dataService } from '../services/dataService';
 
-const initialProjects = [
-  {
-    id: 1,
-    title: 'E-commerce Redesign',
-    client: 'Mailchimp',
-    status: 'In Progress',
-    progress: 65,
-    dueDate: 'Oct 24, 2025',
-    team: [
-      'https://picsum.photos/seed/eleanor/100/100',
-      'https://picsum.photos/seed/guy/100/100',
-      'https://picsum.photos/seed/jerome/100/100',
-    ],
-  },
-  {
-    id: 2,
-    title: 'Mobile App Development',
-    client: 'Gillette',
-    status: 'Planning',
-    progress: 15,
-    dueDate: 'Nov 12, 2025',
-    team: [
-      'https://picsum.photos/seed/kathryn/100/100',
-      'https://picsum.photos/seed/jacob/100/100',
-    ],
-  },
-  {
-    id: 3,
-    title: 'Marketing Campaign',
-    client: 'Google',
-    status: 'Completed',
-    progress: 100,
-    dueDate: 'Jan 05, 2025',
-    team: [
-      'https://picsum.photos/seed/kristin/100/100',
-      'https://picsum.photos/seed/cody/100/100',
-      'https://picsum.photos/seed/eleanor/100/100',
-    ],
-  },
-  {
-    id: 4,
-    title: 'Brand Identity',
-    client: 'Apple',
-    status: 'On Hold',
-    progress: 45,
-    dueDate: 'Feb 18, 2025',
-    team: [
-      'https://picsum.photos/seed/guy/100/100',
-    ],
-  },
-  {
-    id: 5,
-    title: 'CRM Integration',
-    client: 'Spotify',
-    status: 'In Progress',
-    progress: 80,
-    dueDate: 'Mar 02, 2025',
-    team: [
-      'https://picsum.photos/seed/jerome/100/100',
-      'https://picsum.photos/seed/jacob/100/100',
-    ],
-  },
-  {
-    id: 6,
-    title: 'SEO Optimization',
-    client: 'Microsoft',
-    status: 'In Progress',
-    progress: 30,
-    dueDate: 'Mar 15, 2025',
-    team: [
-      'https://picsum.photos/seed/cody/100/100',
-      'https://picsum.photos/seed/kristin/100/100',
-    ],
-  }
-];
+interface Project {
+  id: string;
+  title: string;
+  client: string;
+  status: string;
+  progress: number;
+  dueDate: string;
+  team: string[];
+  createdAt?: any;
+}
 
 const statusStyles = {
   'In Progress': 'bg-brand-50 text-brand-600',
@@ -92,12 +28,24 @@ const progressColors = {
 };
 
 export function Projects() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
 
-  const filteredProjects = initialProjects.filter(project => {
-    const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          project.client.toLowerCase().includes(searchTerm.toLowerCase());
+  useEffect(() => {
+    const unsubscribe = dataService.subscribeToCollection('projects', (data) => {
+      setProjects(data as Project[]);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const filteredProjects = projects.filter(project => {
+    const titleMatch = (project.title?.toLowerCase() || '').includes(searchTerm.toLowerCase());
+    const clientMatch = (project.client?.toLowerCase() || '').includes(searchTerm.toLowerCase());
+    const matchesSearch = titleMatch || clientMatch;
     const matchesStatus = statusFilter === 'All' || project.status === statusFilter;
     
     return matchesSearch && matchesStatus;
@@ -151,12 +99,17 @@ export function Projects() {
       </div>
 
       {/* Projects Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {filteredProjects.length > 0 ? (
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 min-h-[300px]">
+        {loading ? (
+          <div className="col-span-full flex flex-col items-center justify-center py-20">
+            <Loader2 className="w-8 h-8 text-brand-500 animate-spin mb-4" />
+            <p className="text-slate-500 text-sm">Loading projects...</p>
+          </div>
+        ) : filteredProjects.length > 0 ? (
           filteredProjects.map((project) => (
-            <div key={project.id} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm shadow-slate-200/20 hover:shadow-md hover:shadow-slate-200/30 transition-all group">
+            <div key={project.id} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm shadow-slate-200/20 hover:shadow-md hover:shadow-slate-200/30 transition-all group shrink-0">
               <div className="flex items-start justify-between mb-4">
-                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${statusStyles[project.status as keyof typeof statusStyles]}`}>
+                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${statusStyles[project.status as keyof typeof statusStyles] || 'bg-slate-50 text-slate-600'}`}>
                   {project.status}
                 </span>
                 <button className="p-1.5 text-slate-400 hover:text-surface-900 rounded-lg hover:bg-slate-50 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
@@ -176,7 +129,7 @@ export function Projects() {
                 </div>
                 <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                   <div 
-                    className={`h-full rounded-full transition-all duration-1000 ease-out ${progressColors[project.status as keyof typeof progressColors]}`}
+                    className={`h-full rounded-full transition-all duration-1000 ease-out ${progressColors[project.status as keyof typeof progressColors] || 'bg-slate-400'}`}
                     style={{ width: `${project.progress}%` }}
                   />
                 </div>
@@ -185,11 +138,11 @@ export function Projects() {
               <div className="flex items-center justify-between pt-4 border-t border-slate-100">
                 <div className="flex items-center gap-1.5 text-slate-500">
                   <Clock className="w-4 h-4" />
-                  <span className="text-xs font-medium">{project.dueDate}</span>
+                  <span className="text-xs font-medium">{project.dueDate || 'No Date'}</span>
                 </div>
                 
                 <div className="flex items-center -space-x-2">
-                  {project.team.map((avatar, index) => (
+                  {(project.team || []).slice(0, 3).map((avatar, index) => (
                     <img 
                       key={index}
                       src={avatar} 
@@ -198,9 +151,11 @@ export function Projects() {
                       referrerPolicy="no-referrer"
                     />
                   ))}
-                  <div className="w-8 h-8 rounded-full bg-slate-50 border-2 border-white flex items-center justify-center text-[10px] font-bold text-slate-500 relative z-0">
-                    <Plus className="w-3 h-3" />
-                  </div>
+                  {(!project.team || project.team.length === 0 || project.team.length > 3) && (
+                    <div className="w-8 h-8 rounded-full bg-slate-50 border-2 border-white flex items-center justify-center text-[10px] font-bold text-slate-500 relative z-0">
+                      <Plus className="w-3 h-3" />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

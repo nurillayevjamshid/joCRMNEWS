@@ -1,11 +1,14 @@
 import React from 'react';
-import { Search, Bell, Menu } from 'lucide-react';
+import { Search, Bell, Menu, LogOut, User } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 interface HeaderProps {
   setSidebarOpen: (isOpen: boolean) => void;
 }
 
 export function Header({ setSidebarOpen }: HeaderProps) {
+  const { user, logout } = useAuth();
+
   return (
     <header className="h-16 bg-white/80 dark:bg-surface-900/80 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 sticky top-0 z-30 flex items-center justify-between px-4 sm:px-6 lg:px-8 transition-colors duration-300">
       <div className="flex items-center gap-4">
@@ -41,6 +44,29 @@ export function Header({ setSidebarOpen }: HeaderProps) {
           <Bell className="w-5 h-5" />
           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-surface-900 transition-colors" />
         </button>
+
+        <div className="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-700">
+          <div className="hidden sm:flex flex-col items-end">
+            <span className="text-sm font-semibold text-surface-900 leading-tight">
+              {user?.email?.split('@')[0] || 'User'}
+            </span>
+            <span className="text-xs text-slate-500">Admin</span>
+          </div>
+          <div className="w-8 h-8 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center overflow-hidden border border-brand-200">
+            {user?.photoURL ? (
+              <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" />
+            ) : (
+              <User className="w-4 h-4" />
+            )}
+          </div>
+          <button 
+            onClick={() => logout()}
+            className="p-2 ml-1 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-xl transition-colors"
+            title="Log out"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
+        </div>
       </div>
     </header>
   );

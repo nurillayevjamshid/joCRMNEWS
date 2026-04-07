@@ -1,17 +1,38 @@
 import React, { useState } from 'react';
-import { User, Bell, Shield, Palette, Save } from 'lucide-react';
+import { User, Bell, Shield, Palette, Save, Database, Loader2 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { seedService } from '../services/seedService';
 
 export function Settings() {
   const [activeTab, setActiveTab] = useState('appearance');
   const { theme, setTheme, accentColor, setAccentColor } = useTheme();
+  const [isSeeding, setIsSeeding] = useState(false);
+  const [seedMessage, setSeedMessage] = useState('');
 
   const tabs = [
     { id: 'profile', label: 'Profile', icon: User },
     { id: 'notifications', label: 'Notifications', icon: Bell },
     { id: 'security', label: 'Security', icon: Shield },
     { id: 'appearance', label: 'Appearance', icon: Palette },
+    { id: 'data', label: 'Data Management', icon: Database },
   ];
+
+  const handleSeedData = async () => {
+    setIsSeeding(true);
+    setSeedMessage('Seeding database...');
+    try {
+      const result = await seedService.runSeeder();
+      if (result?.success) {
+        setSeedMessage('Database seeded successfully! You can now check your Dashboard.');
+      } else {
+        setSeedMessage('Error seeding database.');
+      }
+    } catch (error) {
+      setSeedMessage('Error seeding database.');
+    } finally {
+      setIsSeeding(false);
+    }
+  };
 
   const accentColors = [
     { id: 'indigo', name: 'Indigo', color: 'bg-indigo-500', ring: 'ring-indigo-500' },
@@ -229,6 +250,38 @@ export function Settings() {
                       {accentColor === accent.id && <div className="w-2 h-2 bg-white rounded-full"></div>}
                     </button>
                   ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'data' && (
+            <div className="space-y-8 max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div>
+                <h3 className="text-lg font-display font-bold text-surface-900 mb-4">Firebase Data Management</h3>
+                <p className="text-sm text-slate-500 mb-6">
+                  Use this tool to populate your database with dummy data. This is useful for testing out the UI and components.
+                </p>
+                <div className="p-4 rounded-2xl border border-brand-100 bg-brand-50/50">
+                  <h4 className="text-sm font-semibold text-brand-900 mb-2">Seed Dummy Data</h4>
+                  <p className="text-xs text-brand-700 mb-4">
+                    This will add default template customers, projects, tasks, leads, and messages directly into your Firebase Firestore.
+                  </p>
+                  
+                  <button 
+                    onClick={handleSeedData}
+                    disabled={isSeeding}
+                    className="flex items-center gap-2 px-6 py-2.5 bg-brand-600 text-white text-sm font-medium rounded-xl hover:bg-brand-700 transition-colors shadow-sm shadow-brand-500/20 disabled:opacity-70 disabled:cursor-not-allowed"
+                  >
+                    {isSeeding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Database className="w-4 h-4" />}
+                    {isSeeding ? 'Seeding Data...' : 'Load Dummy Data'}
+                  </button>
+
+                  {seedMessage && (
+                    <p className={`mt-4 text-sm font-medium ${seedMessage.includes('Error') ? 'text-rose-600' : 'text-emerald-600'}`}>
+                      {seedMessage}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>

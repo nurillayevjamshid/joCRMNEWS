@@ -1,12 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatCard } from './StatCard';
 import { RevenueChart } from './RevenueChart';
 import { RecentLeads } from './RecentLeads';
 import { UpcomingTasks } from './UpcomingTasks';
 import { RecentMessages } from './RecentMessages';
 import { Users, DollarSign, Activity, Target } from 'lucide-react';
+import { dataService } from '../services/dataService';
 
 export function Dashboard() {
+  const [stats, setStats] = useState({
+    activeCustomers: 0,
+    totalRevenue: '$124,563', // Still static for now
+    conversionRate: '14.2%',
+    salesTarget: '82%'
+  });
+
+  useEffect(() => {
+    // Subscribe to customers to get count
+    const unsubscribeCustomers = dataService.subscribeToCollection('customers', (data) => {
+      setStats(prev => ({ ...prev, activeCustomers: data.length }));
+    });
+
+    return () => {
+      unsubscribeCustomers();
+    };
+  }, []);
+
   return (
     <div className="max-w-7xl mx-auto w-full animate-in fade-in duration-500">
       {/* Page Header */}
@@ -21,28 +40,28 @@ export function Dashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
         <StatCard 
           title="Total Revenue" 
-          value="$124,563" 
+          value={stats.totalRevenue} 
           trend={12.5} 
           icon={DollarSign} 
           color="brand" 
         />
         <StatCard 
           title="Active Customers" 
-          value="1,429" 
+          value={stats.activeCustomers.toLocaleString()} 
           trend={5.2} 
           icon={Users} 
           color="emerald" 
         />
         <StatCard 
           title="Conversion Rate" 
-          value="14.2%" 
+          value={stats.conversionRate} 
           trend={-2.4} 
           icon={Activity} 
           color="rose" 
         />
         <StatCard 
           title="Sales Target" 
-          value="82%" 
+          value={stats.salesTarget} 
           trend={8.1} 
           icon={Target} 
           color="amber" 

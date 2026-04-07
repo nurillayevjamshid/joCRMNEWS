@@ -1,44 +1,16 @@
-import React from 'react';
-import { MoreHorizontal } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { MoreHorizontal, Loader2 } from 'lucide-react';
+import { dataService } from '../services/dataService';
 
-const leads = [
-  {
-    id: 1,
-    name: 'Eleanor Pena',
-    company: 'Mailchimp',
-    email: 'eleanor@mailchimp.com',
-    status: 'New',
-    amount: '$12,500',
-    avatar: 'https://picsum.photos/seed/eleanor/100/100',
-  },
-  {
-    id: 2,
-    name: 'Guy Hawkins',
-    company: 'Gillette',
-    email: 'guy@gillette.com',
-    status: 'In Progress',
-    amount: '$8,200',
-    avatar: 'https://picsum.photos/seed/guy/100/100',
-  },
-  {
-    id: 3,
-    name: 'Jerome Bell',
-    company: 'Google',
-    email: 'jerome@google.com',
-    status: 'Won',
-    amount: '$45,000',
-    avatar: 'https://picsum.photos/seed/jerome/100/100',
-  },
-  {
-    id: 4,
-    name: 'Kathryn Murphy',
-    company: 'Apple',
-    email: 'kathryn@apple.com',
-    status: 'Lost',
-    amount: '$3,400',
-    avatar: 'https://picsum.photos/seed/kathryn/100/100',
-  },
-];
+interface Lead {
+  id: string;
+  name: string;
+  company: string;
+  email: string;
+  status: string;
+  amount: string;
+  avatar: string;
+}
 
 const statusStyles = {
   'New': 'bg-blue-50 text-blue-600',
@@ -48,6 +20,18 @@ const statusStyles = {
 };
 
 export function RecentLeads() {
+  const [leads, setLeads] = useState<Lead[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = dataService.subscribeToCollection('leads', (data) => {
+      setLeads(data.slice(0, 4) as Lead[]);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm shadow-slate-200/20 col-span-1 lg:col-span-1 flex flex-col h-full">
       <div className="flex items-center justify-between mb-6">
@@ -61,33 +45,43 @@ export function RecentLeads() {
       </div>
 
       <div className="flex flex-col gap-4">
-        {leads.map((lead) => (
-          <div key={lead.id} className="flex items-center justify-between p-3 -mx-3 rounded-2xl hover:bg-slate-50 transition-colors group">
-            <div className="flex items-center gap-3">
-              <img 
-                src={lead.avatar} 
-                alt={lead.name} 
-                className="w-10 h-10 rounded-full object-cover border border-slate-200"
-                referrerPolicy="no-referrer"
-              />
-              <div>
-                <h4 className="text-sm font-semibold text-surface-900">{lead.name}</h4>
-                <p className="text-xs text-slate-500">{lead.company}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 sm:gap-4">
-              <div className="text-right">
-                <div className="text-sm font-semibold text-surface-900">{lead.amount}</div>
-                <div className={`inline-flex text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 ${statusStyles[lead.status as keyof typeof statusStyles]}`}>
-                  {lead.status}
+        {loading ? (
+          <div className="flex items-center justify-center py-10">
+            <Loader2 className="w-6 h-6 text-brand-500 animate-spin" />
+          </div>
+        ) : leads.length > 0 ? (
+          leads.map((lead) => (
+            <div key={lead.id} className="flex items-center justify-between p-3 -mx-3 rounded-2xl hover:bg-slate-50 transition-colors group">
+              <div className="flex items-center gap-3">
+                <img 
+                  src={lead.avatar} 
+                  alt={lead.name} 
+                  className="w-10 h-10 rounded-full object-cover border border-slate-200"
+                  referrerPolicy="no-referrer"
+                />
+                <div>
+                  <h4 className="text-sm font-semibold text-surface-900">{lead.name}</h4>
+                  <p className="text-xs text-slate-500">{lead.company}</p>
                 </div>
               </div>
-              <button className="p-1.5 sm:p-2 text-slate-400 hover:text-surface-900 sm:opacity-0 group-hover:opacity-100 transition-all">
-                <MoreHorizontal className="w-4 h-4" />
-              </button>
+              <div className="flex items-center gap-2 sm:gap-4">
+                <div className="text-right">
+                  <div className="text-sm font-semibold text-surface-900">{lead.amount}</div>
+                  <div className={`inline-flex text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 ${statusStyles[lead.status as keyof typeof statusStyles] || 'bg-slate-50 text-slate-600'}`}>
+                    {lead.status}
+                  </div>
+                </div>
+                <button className="p-1.5 sm:p-2 text-slate-400 hover:text-surface-900 sm:opacity-0 group-hover:opacity-100 transition-all">
+                  <MoreHorizontal className="w-4 h-4" />
+                </button>
+              </div>
             </div>
+          ))
+        ) : (
+          <div className="text-center py-10 text-slate-400 text-sm italic">
+            No recent leads.
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

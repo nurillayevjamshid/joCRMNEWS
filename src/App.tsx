@@ -9,10 +9,26 @@ import { CalendarView } from './components/CalendarView';
 import { Messages } from './components/Messages';
 import { Analytics } from './components/Analytics';
 import { ThemeProvider } from './context/ThemeContext';
+import { useAuth } from './context/AuthContext';
+import { Login } from './components/Login';
+import { Loader2 } from 'lucide-react';
 
 export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeView, setActiveView] = useState('dashboard');
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-surface-50 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-brand-500 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Login />;
+  }
 
   return (
     <ThemeProvider>
