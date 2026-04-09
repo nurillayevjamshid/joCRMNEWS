@@ -110,8 +110,8 @@ export function Analytics() {
               <p className="text-sm text-slate-500">Financial overview for the selected period</p>
             </div>
           </div>
-          <div className="h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="h-[300px] w-full flex flex-col">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <AreaChart data={revenueData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
@@ -143,8 +143,8 @@ export function Analytics() {
             <h2 className="text-lg font-display font-bold text-surface-900">Traffic Sources</h2>
             <p className="text-sm text-slate-500">Where your users are coming from</p>
           </div>
-          <div className="h-[250px] w-full flex items-center justify-center">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="h-[250px] w-full flex items-center justify-center flex-col">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <PieChart>
                 <Pie
                   data={trafficData}
@@ -187,8 +187,8 @@ export function Analytics() {
               <p className="text-sm text-slate-500">Active vs New users over the week</p>
             </div>
           </div>
-          <div className="h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="h-[300px] w-full flex flex-col">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <BarChart data={activityData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }} barSize={20}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 12 }} dy={10} />
