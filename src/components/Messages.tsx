@@ -4,51 +4,51 @@ import { Search, Phone, Video, MoreVertical, Paperclip, Smile, Send, ArrowLeft, 
 const initialContacts = [
   {
     id: 1,
-    name: 'Sarah Jenkins',
-    role: 'Marketing Director',
-    avatar: 'https://picsum.photos/seed/sarah/100/100',
-    lastMessage: 'Can we reschedule our meeting to tomorrow?',
-    time: '10:42 AM',
+    name: 'Sardor Karimov',
+    role: 'Marketing direktori',
+    avatar: 'https://picsum.photos/seed/sardor/100/100',
+    lastMessage: 'Uchrashuvni ertagaga ko\'chira olamizmi?',
+    time: '10:42',
     unread: 2,
     online: true,
   },
   {
     id: 2,
-    name: 'Michael Chen',
-    role: 'Product Manager',
-    avatar: 'https://picsum.photos/seed/michael/100/100',
-    lastMessage: 'The new designs look absolutely fantastic!',
-    time: 'Yesterday',
+    name: 'Jasur Rahimov',
+    role: 'Mahsulot menejeri',
+    avatar: 'https://picsum.photos/seed/jasur/100/100',
+    lastMessage: 'Yangi dizaynlar juda ajoyib ko\'rinadi!',
+    time: 'Kecha',
     unread: 0,
     online: true,
   },
   {
     id: 3,
-    name: 'Emma Watson',
-    role: 'Client',
-    avatar: 'https://picsum.photos/seed/emma/100/100',
-    lastMessage: 'Please send over the contract when you have a moment.',
-    time: 'Yesterday',
+    name: 'Dilnoza Aliyeva',
+    role: 'Mijoz',
+    avatar: 'https://picsum.photos/seed/dilnoza/100/100',
+    lastMessage: 'Shartnomani yuborishingizni so\'rayman.',
+    time: 'Kecha',
     unread: 0,
     online: false,
   },
   {
     id: 4,
-    name: 'David Miller',
-    role: 'Lead Developer',
-    avatar: 'https://picsum.photos/seed/david/100/100',
-    lastMessage: 'API integration is complete. Ready for testing.',
-    time: 'Tuesday',
+    name: 'Bobur Toshmatov',
+    role: 'Yetakchi dasturchi',
+    avatar: 'https://picsum.photos/seed/bobur/100/100',
+    lastMessage: 'API integratsiya tugadi. Testga tayyor.',
+    time: 'Seshanba',
     unread: 0,
     online: false,
   },
   {
     id: 5,
-    name: 'Jessica Parker',
-    role: 'Designer',
-    avatar: 'https://picsum.photos/seed/jessica/100/100',
-    lastMessage: 'I uploaded the new assets to Figma.',
-    time: 'Monday',
+    name: 'Nodira Xasanova',
+    role: 'Dizayner',
+    avatar: 'https://picsum.photos/seed/nodira/100/100',
+    lastMessage: 'Yangi materiallarni Figmaga yukladim.',
+    time: 'Dushanba',
     unread: 0,
     online: true,
   }
@@ -56,15 +56,15 @@ const initialContacts = [
 
 const initialMessages: Record<number, any[]> = {
   1: [
-    { id: 1, text: 'Hi Alex, how are you?', sender: 'them', time: '10:30 AM', status: 'read' },
-    { id: 2, text: 'I am doing great, thanks! How about you?', sender: 'me', time: '10:32 AM', status: 'read' },
-    { id: 3, text: 'Good! I was looking at the Q3 report.', sender: 'them', time: '10:35 AM', status: 'read' },
-    { id: 4, text: 'Can we reschedule our meeting to tomorrow?', sender: 'them', time: '10:42 AM', status: 'delivered' },
+    { id: 1, text: 'Salom, qandaysiz?', sender: 'them', time: '10:30', status: 'read' },
+    { id: 2, text: 'Yaxshi, rahmat! O\'zingiz-chi?', sender: 'me', time: '10:32', status: 'read' },
+    { id: 3, text: 'Yaxshi! 3-chorak hisobini ko\'ryapman.', sender: 'them', time: '10:35', status: 'read' },
+    { id: 4, text: 'Uchrashuvni ertagaga ko\'chira olamizmi?', sender: 'them', time: '10:42', status: 'delivered' },
   ],
   2: [
-    { id: 1, text: 'Hey Alex, did you see the new mockups?', sender: 'them', time: 'Yesterday', status: 'read' },
-    { id: 2, text: 'Yes, I just reviewed them.', sender: 'me', time: 'Yesterday', status: 'read' },
-    { id: 3, text: 'The new designs look absolutely fantastic!', sender: 'them', time: 'Yesterday', status: 'read' },
+    { id: 1, text: 'Yangi maketlarni ko\'rdingizmi?', sender: 'them', time: 'Kecha', status: 'read' },
+    { id: 2, text: 'Ha, endi ko\'rib chiqdim.', sender: 'me', time: 'Kecha', status: 'read' },
+    { id: 3, text: 'Yangi dizaynlar juda ajoyib ko\'rinadi!', sender: 'them', time: 'Kecha', status: 'read' },
   ]
 };
 
@@ -103,24 +103,22 @@ export function Messages() {
   return (
     <div className="max-w-7xl mx-auto w-full h-[calc(100vh-8rem)] min-h-[600px] animate-in fade-in duration-500 flex gap-6">
       
-      {/* Left Sidebar - Contact List */}
       <div className={`
         ${activeContactId ? 'hidden md:flex' : 'flex'} 
         w-full md:w-80 lg:w-96 bg-white rounded-3xl border border-slate-100 shadow-sm shadow-slate-200/20 flex-col h-full overflow-hidden
       `}>
-        {/* Header & Search */}
         <div className="p-5 border-b border-slate-100">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-xl font-display font-bold text-surface-900 tracking-tight">Messages</h2>
+            <h2 className="text-xl font-display font-bold text-surface-900 tracking-tight">Xabarlar</h2>
             <span className="bg-brand-50 text-brand-600 text-xs font-bold px-2.5 py-1 rounded-full">
-              2 New
+              2 yangi
             </span>
           </div>
           <div className="relative">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input 
               type="text" 
-              placeholder="Search messages..." 
+              placeholder="Xabarlarni qidirish..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
@@ -128,7 +126,6 @@ export function Messages() {
           </div>
         </div>
 
-        {/* Contacts List */}
         <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-1">
           {filteredContacts.map(contact => (
             <button
@@ -176,14 +173,12 @@ export function Messages() {
         </div>
       </div>
 
-      {/* Right Area - Active Chat */}
       <div className={`
         ${!activeContactId ? 'hidden md:flex' : 'flex'} 
         flex-1 bg-white rounded-3xl border border-slate-100 shadow-sm shadow-slate-200/20 flex-col h-full overflow-hidden relative
       `}>
         {activeContact ? (
           <>
-            {/* Chat Header */}
             <div className="h-20 px-6 border-b border-slate-100 flex items-center justify-between bg-white/80 backdrop-blur-sm z-10">
               <div className="flex items-center gap-4">
                 <button 
@@ -205,7 +200,7 @@ export function Messages() {
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-surface-900">{activeContact.name}</h3>
-                  <p className="text-xs text-slate-500">{activeContact.online ? 'Online now' : activeContact.role}</p>
+                  <p className="text-xs text-slate-500">{activeContact.online ? 'Hozir onlayn' : activeContact.role}</p>
                 </div>
               </div>
               
@@ -223,13 +218,11 @@ export function Messages() {
               </div>
             </div>
 
-            {/* Messages Area */}
             <div className="flex-1 overflow-y-auto custom-scrollbar p-6 bg-slate-50/30">
               <div className="flex flex-col gap-4">
-                {/* Date Divider */}
                 <div className="flex items-center justify-center my-2">
                   <span className="bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">
-                    Today
+                    Bugun
                   </span>
                 </div>
 
@@ -260,14 +253,13 @@ export function Messages() {
                     <div className="w-16 h-16 bg-white rounded-2xl border border-slate-100 flex items-center justify-center mb-4 shadow-sm">
                       <MessageSquare className="w-8 h-8 text-slate-300" />
                     </div>
-                    <h4 className="text-sm font-semibold text-surface-900">No messages yet</h4>
-                    <p className="text-xs text-slate-500 mt-1">Send a message to start the conversation.</p>
+                    <h4 className="text-sm font-semibold text-surface-900">Hali xabar yo'q</h4>
+                    <p className="text-xs text-slate-500 mt-1">Suhbatni boshlash uchun xabar yuboring.</p>
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Input Area */}
             <div className="p-4 bg-white border-t border-slate-100">
               <form onSubmit={handleSendMessage} className="flex items-end gap-2">
                 <button type="button" className="p-3 text-slate-400 hover:text-surface-900 hover:bg-slate-50 rounded-xl transition-colors flex-shrink-0">
@@ -277,7 +269,7 @@ export function Messages() {
                 <div className="flex-1 relative bg-slate-50 border border-slate-200 rounded-2xl focus-within:ring-2 focus-within:ring-brand-500/20 focus-within:border-brand-500 transition-all flex items-center">
                   <input 
                     type="text" 
-                    placeholder="Type a message..." 
+                    placeholder="Xabar yozing..." 
                     value={messageInput}
                     onChange={(e) => setMessageInput(e.target.value)}
                     className="w-full bg-transparent px-4 py-3 text-sm focus:outline-none"
@@ -302,8 +294,8 @@ export function Messages() {
             <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mb-4">
               <MessageSquare className="w-10 h-10 text-slate-300" />
             </div>
-            <h2 className="text-xl font-display font-bold text-surface-900">Your Messages</h2>
-            <p className="text-sm text-slate-500 mt-2">Select a conversation from the list to start chatting.</p>
+            <h2 className="text-xl font-display font-bold text-surface-900">Xabarlar</h2>
+            <p className="text-sm text-slate-500 mt-2">Suhbatni boshlash uchun kontakt tanlang.</p>
           </div>
         )}
       </div>

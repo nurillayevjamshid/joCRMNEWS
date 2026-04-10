@@ -6,51 +6,50 @@ import {
 import { Calendar, Download, TrendingUp, Users, DollarSign, Activity, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 
 const revenueData = [
-  { name: 'Jan', revenue: 4000, expenses: 2400 },
-  { name: 'Feb', revenue: 3000, expenses: 1398 },
+  { name: 'Yan', revenue: 4000, expenses: 2400 },
+  { name: 'Fev', revenue: 3000, expenses: 1398 },
   { name: 'Mar', revenue: 2000, expenses: 9800 },
   { name: 'Apr', revenue: 2780, expenses: 3908 },
   { name: 'May', revenue: 1890, expenses: 4800 },
-  { name: 'Jun', revenue: 2390, expenses: 3800 },
-  { name: 'Jul', revenue: 3490, expenses: 4300 },
-  { name: 'Aug', revenue: 4000, expenses: 2400 },
-  { name: 'Sep', revenue: 5000, expenses: 3000 },
-  { name: 'Oct', revenue: 6500, expenses: 4200 },
-  { name: 'Nov', revenue: 7800, expenses: 5000 },
-  { name: 'Dec', revenue: 9000, expenses: 6000 },
+  { name: 'Iyn', revenue: 2390, expenses: 3800 },
+  { name: 'Iyl', revenue: 3490, expenses: 4300 },
+  { name: 'Avg', revenue: 4000, expenses: 2400 },
+  { name: 'Sen', revenue: 5000, expenses: 3000 },
+  { name: 'Okt', revenue: 6500, expenses: 4200 },
+  { name: 'Noy', revenue: 7800, expenses: 5000 },
+  { name: 'Dek', revenue: 9000, expenses: 6000 },
 ];
 
 const trafficData = [
-  { name: 'Organic Search', value: 400 },
-  { name: 'Direct', value: 300 },
-  { name: 'Social Media', value: 300 },
-  { name: 'Referral', value: 200 },
+  { name: 'Organik qidiruv', value: 400 },
+  { name: 'To\'g\'ridan-to\'g\'ri', value: 300 },
+  { name: 'Ijtimoiy tarmoqlar', value: 300 },
+  { name: 'Havola orqali', value: 200 },
 ];
 
 const COLORS = ['#4f46e5', '#10b981', '#f59e0b', '#8b5cf6'];
 
 const activityData = [
-  { name: 'Mon', active: 120, new: 40 },
-  { name: 'Tue', active: 132, new: 50 },
-  { name: 'Wed', active: 101, new: 30 },
-  { name: 'Thu', active: 143, new: 60 },
-  { name: 'Fri', active: 190, new: 80 },
-  { name: 'Sat', active: 230, new: 110 },
-  { name: 'Sun', active: 210, new: 90 },
+  { name: 'Dush', active: 120, new: 40 },
+  { name: 'Sesh', active: 132, new: 50 },
+  { name: 'Chor', active: 101, new: 30 },
+  { name: 'Pay', active: 143, new: 60 },
+  { name: 'Jum', active: 190, new: 80 },
+  { name: 'Shan', active: 230, new: 110 },
+  { name: 'Yak', active: 210, new: 90 },
 ];
 
 export function Analytics() {
-  const [timeRange, setTimeRange] = useState('This Year');
+  const [timeRange, setTimeRange] = useState('Bu yil');
 
   return (
     <div className="max-w-7xl mx-auto w-full animate-in fade-in duration-500">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl sm:text-3xl font-display font-bold text-surface-900 tracking-tight">
-            Analytics Overview
+            Tahlillar
           </h1>
-          <p className="text-slate-500 mt-1">Track your business performance and metrics.</p>
+          <p className="text-slate-500 mt-1">Biznes ko'rsatkichlari va natijalar.</p>
         </div>
         <div className="flex items-center gap-3">
           <div className="relative">
@@ -60,26 +59,25 @@ export function Analytics() {
               onChange={(e) => setTimeRange(e.target.value)}
               className="pl-9 pr-8 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 appearance-none cursor-pointer shadow-sm shadow-slate-200/20"
             >
-              <option>Today</option>
-              <option>Last 7 Days</option>
-              <option>This Month</option>
-              <option>This Year</option>
+              <option>Bugun</option>
+              <option>So'nggi 7 kun</option>
+              <option>Bu oy</option>
+              <option>Bu yil</option>
             </select>
           </div>
           <button className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-xl hover:bg-slate-50 transition-colors shadow-sm shadow-slate-200/20">
             <Download className="w-4 h-4" />
-            <span className="hidden sm:inline">Export Report</span>
+            <span className="hidden sm:inline">Hisobotni yuklash</span>
           </button>
         </div>
       </div>
 
-      {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
         {[
-          { title: 'Total Revenue', value: '$124,563.00', trend: '+14.5%', isPositive: true, icon: DollarSign, color: 'brand' },
-          { title: 'Active Users', value: '45,231', trend: '+22.1%', isPositive: true, icon: Users, color: 'emerald' },
-          { title: 'Conversion Rate', value: '3.24%', trend: '-1.4%', isPositive: false, icon: Activity, color: 'rose' },
-          { title: 'Bounce Rate', value: '42.3%', trend: '-5.2%', isPositive: true, icon: TrendingUp, color: 'amber' },
+          { title: 'Jami daromad', value: '$124,563.00', trend: '+14.5%', isPositive: true, icon: DollarSign, color: 'brand' },
+          { title: 'Faol foydalanuvchilar', value: '45,231', trend: '+22.1%', isPositive: true, icon: Users, color: 'emerald' },
+          { title: 'Konversiya darajasi', value: '3.24%', trend: '-1.4%', isPositive: false, icon: Activity, color: 'rose' },
+          { title: 'Rad etish darajasi', value: '42.3%', trend: '-5.2%', isPositive: true, icon: TrendingUp, color: 'amber' },
         ].map((stat, index) => (
           <div key={index} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm shadow-slate-200/20 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between mb-4">
@@ -99,15 +97,13 @@ export function Analytics() {
         ))}
       </div>
 
-      {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        {/* Main Revenue Chart */}
         <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm shadow-slate-200/20 lg:col-span-2">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-lg font-display font-bold text-surface-900">Revenue & Expenses</h2>
-              <p className="text-sm text-slate-500">Financial overview for the selected period</p>
+              <h2 className="text-lg font-display font-bold text-surface-900">Daromad va xarajatlar</h2>
+              <p className="text-sm text-slate-500">Tanlangan davr uchun moliyaviy ko'rsatkichlar</p>
             </div>
           </div>
           <div className="h-[300px] w-full flex flex-col">
@@ -137,11 +133,10 @@ export function Analytics() {
           </div>
         </div>
 
-        {/* Traffic Sources */}
         <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm shadow-slate-200/20">
           <div className="mb-6">
-            <h2 className="text-lg font-display font-bold text-surface-900">Traffic Sources</h2>
-            <p className="text-sm text-slate-500">Where your users are coming from</p>
+            <h2 className="text-lg font-display font-bold text-surface-900">Trafik manbalari</h2>
+            <p className="text-sm text-slate-500">Foydalanuvchilar qayerdan keladi</p>
           </div>
           <div className="h-[250px] w-full flex items-center justify-center flex-col">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
@@ -179,12 +174,11 @@ export function Analytics() {
           </div>
         </div>
 
-        {/* Weekly Activity */}
         <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm shadow-slate-200/20 lg:col-span-3">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-lg font-display font-bold text-surface-900">Weekly User Activity</h2>
-              <p className="text-sm text-slate-500">Active vs New users over the week</p>
+              <h2 className="text-lg font-display font-bold text-surface-900">Haftalik foydalanuvchi faolligi</h2>
+              <p className="text-sm text-slate-500">Faol va yangi foydalanuvchilar</p>
             </div>
           </div>
           <div className="h-[300px] w-full flex flex-col">
@@ -198,8 +192,8 @@ export function Analytics() {
                   contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                 />
                 <Legend iconType="circle" wrapperStyle={{ paddingTop: '20px' }} />
-                <Bar dataKey="active" name="Active Users" fill="#4f46e5" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="new" name="New Users" fill="#10b981" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="active" name="Faol foydalanuvchilar" fill="#4f46e5" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="new" name="Yangi foydalanuvchilar" fill="#10b981" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

@@ -54,10 +54,10 @@ export default function App() {
             {activeView !== 'dashboard' && activeView !== 'customers' && activeView !== 'projects' && activeView !== 'calendar' && activeView !== 'messages' && activeView !== 'analytics' && activeView !== 'settings' && (
               <div className="flex flex-col items-center justify-center h-[60vh] text-center animate-in fade-in duration-500">
                 <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-4">
-                  <span className="text-slate-400 font-medium">Coming Soon</span>
+                  <span className="text-slate-400 font-medium">Tez kunda</span>
                 </div>
-                <h2 className="text-xl font-display font-bold text-surface-900">Section under construction</h2>
-                <p className="text-slate-500 mt-2">We're working hard to bring you this feature.</p>
+                <h2 className="text-xl font-display font-bold text-surface-900">Bo'lim ishlanmoqda</h2>
+                <p className="text-slate-500 mt-2">Bu funksiya ustida ish olib borilmoqda.</p>
               </div>
             )}
           </div>

@@ -20,19 +20,19 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { id: 'dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { id: 'customers', icon: Users, label: 'Customers' },
-  { id: 'projects', icon: Briefcase, label: 'Projects' },
-  { id: 'calendar', icon: Calendar, label: 'Calendar' },
-  { id: 'messages', icon: MessageSquare, label: 'Messages', badge: '3' },
-  { id: 'analytics', icon: PieChart, label: 'Analytics' },
+  { id: 'dashboard', icon: LayoutDashboard, label: 'Boshqaruv paneli' },
+  { id: 'customers', icon: Users, label: 'Mijozlar' },
+  { id: 'projects', icon: Briefcase, label: 'Loyihalar' },
+  { id: 'calendar', icon: Calendar, label: 'Taqvim' },
+  { id: 'messages', icon: MessageSquare, label: 'Xabarlar', badge: '3' },
+  { id: 'analytics', icon: PieChart, label: 'Tahlillar' },
 ];
 
 export function Sidebar({ isOpen, setIsOpen, activeView, setActiveView }: SidebarProps) {
   const { user, logout } = useAuth();
+
   return (
     <>
-      {/* Mobile Overlay */}
       {isOpen && (
         <div 
           className="fixed inset-0 bg-surface-900/20 backdrop-blur-sm z-40 lg:hidden"
@@ -40,13 +40,11 @@ export function Sidebar({ isOpen, setIsOpen, activeView, setActiveView }: Sideba
         />
       )}
 
-      {/* Sidebar */}
       <aside className={`
         fixed top-0 left-0 z-50 h-screen w-64 bg-white border-r border-slate-100
         transition-transform duration-300 ease-in-out flex flex-col
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
-        {/* Logo */}
         <div className="h-16 flex items-center px-6 border-b border-slate-50">
           <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => setActiveView('dashboard')}>
             <div className="w-8 h-8 rounded-xl bg-brand-600 flex items-center justify-center shadow-sm shadow-brand-500/20">
@@ -56,9 +54,8 @@ export function Sidebar({ isOpen, setIsOpen, activeView, setActiveView }: Sideba
           </div>
         </div>
 
-        {/* Navigation */}
         <div className="flex-1 overflow-y-auto py-6 px-4 flex flex-col gap-1">
-          <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-2">Menu</div>
+          <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-2">Menyu</div>
           {navItems.map((item) => {
             const isActive = activeView === item.id;
             return (
@@ -88,7 +85,7 @@ export function Sidebar({ isOpen, setIsOpen, activeView, setActiveView }: Sideba
             );
           })}
 
-          <div className="mt-8 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-2">Others</div>
+          <div className="mt-8 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-2">Boshqa</div>
           <button 
             onClick={() => {
               setActiveView('settings');
@@ -102,23 +99,22 @@ export function Sidebar({ isOpen, setIsOpen, activeView, setActiveView }: Sideba
             `}
           >
             <SettingsIcon className={`w-5 h-5 ${activeView === 'settings' ? 'text-brand-600' : 'text-slate-400 group-hover:text-surface-900'} transition-colors`} />
-            <span>Settings</span>
+            <span>Sozlamalar</span>
           </button>
         </div>
 
-        {/* User Profile */}
         <div className="p-4 border-t border-slate-50">
           <div className="flex items-center justify-between w-full p-2 rounded-xl group">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center overflow-hidden border border-brand-200">
                 {user?.photoURL ? (
-                  <img src={user.photoURL} alt="User" className="w-full h-full object-cover" />
+                  <img src={user.photoURL} alt="Foydalanuvchi" className="w-full h-full object-cover" />
                 ) : (
                   <span className="text-sm font-bold">{user?.email?.charAt(0).toUpperCase() || 'U'}</span>
                 )}
               </div>
               <div className="text-left">
-                <div className="text-sm font-semibold text-surface-900">{user?.displayName || user?.email?.split('@')[0] || 'User'}</div>
+                <div className="text-sm font-semibold text-surface-900">{user?.displayName || user?.email?.split('@')[0] || 'Foydalanuvchi'}</div>
                 <div className="text-xs text-slate-500">{user?.email || ''}</div>
               </div>
             </div>

@@ -12,11 +12,22 @@ interface Lead {
   avatar: string;
 }
 
-const statusStyles = {
+const statusStyles: Record<string, string> = {
+  'Yangi': 'bg-blue-50 text-blue-600',
+  'Jarayonda': 'bg-amber-50 text-amber-600',
+  'Yutildi': 'bg-emerald-50 text-emerald-600',
+  'Yo\'qotildi': 'bg-rose-50 text-rose-600',
   'New': 'bg-blue-50 text-blue-600',
   'In Progress': 'bg-amber-50 text-amber-600',
   'Won': 'bg-emerald-50 text-emerald-600',
   'Lost': 'bg-rose-50 text-rose-600',
+};
+
+const statusMap: Record<string, string> = {
+  'New': 'Yangi',
+  'In Progress': 'Jarayonda',
+  'Won': 'Yutildi',
+  'Lost': 'Yo\'qotildi',
 };
 
 export function RecentLeads() {
@@ -32,15 +43,17 @@ export function RecentLeads() {
     return () => unsubscribe();
   }, []);
 
+  const getStatusLabel = (status: string) => statusMap[status] || status;
+
   return (
     <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm shadow-slate-200/20 col-span-1 lg:col-span-1 flex flex-col h-full">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-lg font-display font-bold text-surface-900">Recent Leads</h2>
-          <p className="text-sm text-slate-500">Latest potential customers</p>
+          <h2 className="text-lg font-display font-bold text-surface-900">So'nggi lidlar</h2>
+          <p className="text-sm text-slate-500">Eng so'nggi potentsial mijozlar</p>
         </div>
         <button className="text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors">
-          View All
+          Barchasi
         </button>
       </div>
 
@@ -67,8 +80,8 @@ export function RecentLeads() {
               <div className="flex items-center gap-2 sm:gap-4">
                 <div className="text-right">
                   <div className="text-sm font-semibold text-surface-900">{lead.amount}</div>
-                  <div className={`inline-flex text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 ${statusStyles[lead.status as keyof typeof statusStyles] || 'bg-slate-50 text-slate-600'}`}>
-                    {lead.status}
+                  <div className={`inline-flex text-[10px] font-bold px-2 py-0.5 rounded-full mt-1 ${statusStyles[lead.status] || 'bg-slate-50 text-slate-600'}`}>
+                    {getStatusLabel(lead.status)}
                   </div>
                 </div>
                 <button className="p-1.5 sm:p-2 text-slate-400 hover:text-surface-900 sm:opacity-0 group-hover:opacity-100 transition-all">
@@ -79,7 +92,7 @@ export function RecentLeads() {
           ))
         ) : (
           <div className="text-center py-10 text-slate-400 text-sm italic">
-            No recent leads.
+            Lidlar yo'q.
           </div>
         )}
       </div>

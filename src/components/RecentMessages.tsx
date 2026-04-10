@@ -28,8 +28,8 @@ export function RecentMessages() {
     <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm shadow-slate-200/20 flex flex-col h-full">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-lg font-display font-bold text-surface-900">Recent Messages</h2>
-          <p className="text-sm text-slate-500">Latest communications</p>
+          <h2 className="text-lg font-display font-bold text-surface-900">So'nggi xabarlar</h2>
+          <p className="text-sm text-slate-500">Eng so'nggi muloqotlar</p>
         </div>
         <button className="p-2 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-full transition-colors">
           <MessageSquare className="w-5 h-5" />
@@ -70,13 +70,13 @@ export function RecentMessages() {
           ))
         ) : (
           <div className="text-center py-10 text-slate-400 text-sm italic">
-            No recent messages.
+            Xabarlar yo'q.
           </div>
         )}
       </div>
       
       <button className="mt-4 w-full py-2.5 flex items-center justify-center gap-2 text-sm font-semibold text-brand-600 bg-brand-50 hover:bg-brand-100 rounded-xl transition-colors">
-        View All Messages
+        Barcha xabarlar
         <ArrowRight className="w-4 h-4" />
       </button>
     </div>

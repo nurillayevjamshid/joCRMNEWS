@@ -2,18 +2,18 @@ import React from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const data = [
-  { name: 'Jan', revenue: 4000, target: 2400 },
-  { name: 'Feb', revenue: 3000, target: 1398 },
+  { name: 'Yan', revenue: 4000, target: 2400 },
+  { name: 'Fev', revenue: 3000, target: 1398 },
   { name: 'Mar', revenue: 2000, target: 9800 },
   { name: 'Apr', revenue: 2780, target: 3908 },
   { name: 'May', revenue: 1890, target: 4800 },
-  { name: 'Jun', revenue: 2390, target: 3800 },
-  { name: 'Jul', revenue: 3490, target: 4300 },
-  { name: 'Aug', revenue: 4000, target: 2400 },
-  { name: 'Sep', revenue: 5000, target: 2400 },
-  { name: 'Oct', revenue: 4800, target: 2400 },
-  { name: 'Nov', revenue: 6000, target: 2400 },
-  { name: 'Dec', revenue: 7200, target: 2400 },
+  { name: 'Iyn', revenue: 2390, target: 3800 },
+  { name: 'Iyl', revenue: 3490, target: 4300 },
+  { name: 'Avg', revenue: 4000, target: 2400 },
+  { name: 'Sen', revenue: 5000, target: 2400 },
+  { name: 'Okt', revenue: 4800, target: 2400 },
+  { name: 'Noy', revenue: 6000, target: 2400 },
+  { name: 'Dek', revenue: 7200, target: 2400 },
 ];
 
 export function RevenueChart() {
@@ -21,12 +21,12 @@ export function RevenueChart() {
     <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm shadow-slate-200/20 col-span-1 lg:col-span-2">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-lg font-display font-bold text-surface-900">Revenue Overview</h2>
-          <p className="text-sm text-slate-500">Monthly revenue compared to target</p>
+          <h2 className="text-lg font-display font-bold text-surface-900">Daromad ko'rinishi</h2>
+          <p className="text-sm text-slate-500">Oylik daromad va maqsad solishtirgichi</p>
         </div>
         <select className="bg-slate-50 border border-slate-100 text-sm rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-500/20 text-slate-600 font-medium">
-          <option>This Year</option>
-          <option>Last Year</option>
+          <option>Bu yil</option>
+          <option>O'tgan yil</option>
         </select>
       </div>
       <div className="h-[300px] w-full flex flex-col">

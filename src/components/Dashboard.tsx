@@ -12,13 +12,12 @@ export function Dashboard() {
   const { user } = useAuth();
   const [stats, setStats] = useState({
     activeCustomers: 0,
-    totalRevenue: '$124,563', // Still static for now
+    totalRevenue: '$124,563',
     conversionRate: '14.2%',
     salesTarget: '82%'
   });
 
   useEffect(() => {
-    // Subscribe to customers to get count
     const unsubscribeCustomers = dataService.subscribeToCollection('customers', (data) => {
       setStats(prev => ({ ...prev, activeCustomers: data.length }));
     });
@@ -30,39 +29,37 @@ export function Dashboard() {
 
   return (
     <div className="max-w-7xl mx-auto w-full animate-in fade-in duration-500">
-      {/* Page Header */}
       <div className="mb-8">
         <h1 className="text-2xl sm:text-3xl font-display font-bold text-surface-900 tracking-tight">
-          Welcome back, {user?.displayName || user?.email?.split('@')[0] || 'User'}! 👋
+          Xush kelibsiz, {user?.displayName || user?.email?.split('@')[0] || 'Foydalanuvchi'}! 👋
         </h1>
-        <p className="text-slate-500 mt-1">Here's what's happening with your business today.</p>
+        <p className="text-slate-500 mt-1">Bugungi biznes holatingiz haqida ma'lumot.</p>
       </div>
 
-      {/* Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
         <StatCard 
-          title="Total Revenue" 
+          title="Jami daromad" 
           value={stats.totalRevenue} 
           trend={12.5} 
           icon={DollarSign} 
           color="brand" 
         />
         <StatCard 
-          title="Active Customers" 
+          title="Faol mijozlar" 
           value={stats.activeCustomers.toLocaleString()} 
           trend={5.2} 
           icon={Users} 
           color="emerald" 
         />
         <StatCard 
-          title="Conversion Rate" 
+          title="Konversiya darajasi" 
           value={stats.conversionRate} 
           trend={-2.4} 
           icon={Activity} 
           color="rose" 
         />
         <StatCard 
-          title="Sales Target" 
+          title="Sotuv maqsadi" 
           value={stats.salesTarget} 
           trend={8.1} 
           icon={Target} 
@@ -70,13 +67,11 @@ export function Dashboard() {
         />
       </div>
 
-      {/* Charts & Lists */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-6">
         <RevenueChart />
         <RecentLeads />
       </div>
 
-      {/* Bottom Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <UpcomingTasks />
         <RecentMessages />

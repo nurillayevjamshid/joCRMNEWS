@@ -11,6 +11,12 @@ interface Task {
   createdAt?: any;
 }
 
+const priorityMap: Record<string, string> = {
+  'high': 'Yuqori',
+  'medium': "O'rtacha",
+  'low': 'Past',
+};
+
 export function UpcomingTasks() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +35,7 @@ export function UpcomingTasks() {
     try {
       await dataService.updateData('tasks', task.id, { status: newStatus });
     } catch (error) {
-      console.error("Error toggling task status:", error);
+      console.error("Vazifa holatini o'zgartirishda xatolik:", error);
     }
   };
 
@@ -37,11 +43,11 @@ export function UpcomingTasks() {
     <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm shadow-slate-200/20 flex flex-col h-full">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-lg font-display font-bold text-surface-900">Upcoming Tasks</h2>
-          <p className="text-sm text-slate-500">Your schedule for the next 2 days</p>
+          <h2 className="text-lg font-display font-bold text-surface-900">Yaqqin vazifalar</h2>
+          <p className="text-sm text-slate-500">Keyingi 2 kun uchun jadval</p>
         </div>
         <button className="text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors">
-          Add Task
+          Vazifa qo'shish
         </button>
       </div>
 
@@ -79,7 +85,7 @@ export function UpcomingTasks() {
                       task.priority === 'high' ? 'text-rose-600' : 
                       task.priority === 'medium' ? 'text-amber-600' : 'text-slate-500'
                     }`}>
-                      {task.priority}
+                      {priorityMap[task.priority] || task.priority}
                     </span>
                   </div>
                 </div>
@@ -88,7 +94,7 @@ export function UpcomingTasks() {
           ))
         ) : (
           <div className="text-center py-10 text-slate-400 text-sm italic">
-            No upcoming tasks.
+            Vazifalar yo'q.
           </div>
         )}
       </div>
