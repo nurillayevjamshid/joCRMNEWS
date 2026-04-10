@@ -15,7 +15,11 @@ interface Customer {
   createdAt?: any;
 }
 
-export function Customers() {
+interface CustomersProps {
+  onSelectCustomer?: (id: string) => void;
+}
+
+export function Customers({ onSelectCustomer }: CustomersProps) {
   const { addToast } = useToast();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
@@ -169,7 +173,11 @@ export function Customers() {
               <tbody className="divide-y divide-slate-100">
                 {filteredCustomers.length > 0 ? (
                   filteredCustomers.map((customer) => (
-                    <tr key={customer.id} className="hover:bg-slate-50/80 transition-colors group">
+                    <tr
+                      key={customer.id}
+                      className="hover:bg-slate-50/80 transition-colors group cursor-pointer"
+                      onClick={() => onSelectCustomer?.(customer.id)}
+                    >
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <img 
