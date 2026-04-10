@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Loader2, Lock, Mail } from 'lucide-react';
+import { Loader2, Lock, Mail, Eye, EyeOff } from 'lucide-react';
 
 export function Login() {
   const { login, loginWithGoogle } = useAuth();
@@ -8,6 +8,7 @@ export function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,7 +17,7 @@ export function Login() {
     try {
       await login(email, password);
     } catch (err: any) {
-      setError(err.message || 'Failed to login');
+      setError(err.message || 'Kirishda xatolik yuz berdi');
     } finally {
       setLoading(false);
     }
@@ -27,83 +28,97 @@ export function Login() {
     try {
       await loginWithGoogle();
     } catch (err: any) {
-      setError(err.message || 'Failed to login with Google');
+      setError(err.message || 'Google orqali kirishda xatolik');
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl shadow-xl w-full max-w-md overflow-hidden border border-slate-100 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Background decorations */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-brand-500/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-600/5 rounded-full blur-3xl" />
+
+      <div className="w-full max-w-md relative z-10">
+        {/* Logo & Header */}
         <div className="text-center mb-8">
-          <div className="w-12 h-12 bg-brand-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-brand-500/30">
-            <span className="text-white font-bold text-xl">Jo</span>
+          <div className="w-16 h-16 bg-gradient-to-br from-brand-500 to-brand-700 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-2xl shadow-brand-500/30 rotate-3 hover:rotate-0 transition-transform duration-300">
+            <span className="text-white font-bold text-2xl">Jo</span>
           </div>
-          <h2 className="text-2xl font-display font-bold text-surface-900">Welcome Back</h2>
-          <p className="text-sm text-slate-500 mt-2">Sign in to access your CRM dashboard</p>
+          <h1 className="text-3xl font-display font-bold text-white mb-2">Xush kelibsiz!</h1>
+          <p className="text-slate-400 text-sm">CRM dashboardga kirish uchun tizimga kiring</p>
         </div>
 
-        {error && (
-          <div className="bg-rose-50 text-rose-600 text-sm p-3 rounded-xl mb-6 text-center">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
-            <div className="relative border border-slate-200 rounded-xl focus-within:ring-2 focus-within:ring-brand-500/20 focus-within:border-brand-500 transition-all flex items-center bg-slate-50">
-              <Mail className="w-5 h-5 text-slate-400 absolute left-3" />
-              <input 
-                type="email" 
-                required
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                className="w-full bg-transparent pl-10 pr-4 py-3 text-sm focus:outline-none"
-                placeholder="you@example.com"
-              />
+        {/* Login Card */}
+        <div className="bg-white/[0.03] backdrop-blur-xl rounded-3xl border border-white/10 p-8 shadow-2xl">
+          {error && (
+            <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 text-sm p-3.5 rounded-xl mb-6 text-center font-medium">
+              {error}
             </div>
-          </div>
+          )}
 
-          <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className="block text-sm font-medium text-slate-700">Password</label>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">Email manzil</label>
+              <div className="relative group">
+                <Mail className="w-5 h-5 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 group-focus-within:text-brand-400 transition-colors" />
+                <input 
+                  type="email" 
+                  required
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  className="w-full bg-white/[0.04] border border-white/10 rounded-xl pl-11 pr-4 py-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500/50 transition-all"
+                  placeholder="you@example.com"
+                />
+              </div>
             </div>
-            <div className="relative border border-slate-200 rounded-xl focus-within:ring-2 focus-within:ring-brand-500/20 focus-within:border-brand-500 transition-all flex items-center bg-slate-50">
-              <Lock className="w-5 h-5 text-slate-400 absolute left-3" />
-              <input 
-                type="password" 
-                required
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                className="w-full bg-transparent pl-10 pr-4 py-3 text-sm focus:outline-none"
-                placeholder="••••••••"
-              />
+
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">Parol</label>
+              <div className="relative group">
+                <Lock className="w-5 h-5 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 group-focus-within:text-brand-400 transition-colors" />
+                <input 
+                  type={showPassword ? 'text' : 'password'} 
+                  required
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  className="w-full bg-white/[0.04] border border-white/10 rounded-xl pl-11 pr-12 py-3.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500/50 transition-all"
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
             </div>
-          </div>
 
-          <button 
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 bg-brand-600 text-white rounded-xl hover:bg-brand-700 transition-colors font-medium flex items-center justify-center gap-2 shadow-sm shadow-brand-500/20 disabled:opacity-70 mt-6"
-          >
-            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Log In'}
-          </button>
-        </form>
+            <button 
+              type="submit"
+              disabled={loading}
+              className="w-full py-3.5 bg-gradient-to-r from-brand-600 to-brand-500 text-white rounded-xl hover:from-brand-500 hover:to-brand-400 transition-all font-semibold flex items-center justify-center gap-2 shadow-lg shadow-brand-500/25 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+            >
+              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Kirish'}
+            </button>
+          </form>
 
-        <div className="mt-6">
-          <div className="relative">
+          {/* Divider */}
+          <div className="mt-6 relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-200"></div>
+              <div className="w-full border-t border-white/10"></div>
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-slate-500">Or continue with</span>
+            <div className="relative flex justify-center text-xs">
+              <span className="px-3 bg-transparent text-slate-500 uppercase tracking-wider">yoki</span>
             </div>
           </div>
 
+          {/* Google Login */}
           <div className="mt-6">
             <button
               onClick={handleGoogleLogin}
-              className="w-full flex items-center justify-center gap-3 px-4 py-2.5 border border-slate-200 rounded-xl bg-white text-slate-700 hover:bg-slate-50 transition-colors font-medium"
+              className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white/[0.04] border border-white/10 rounded-xl text-white hover:bg-white/[0.08] transition-all font-medium text-sm"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -111,17 +126,15 @@ export function Login() {
                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
               </svg>
-              Sign in with Google
+              Google orqali kirish
             </button>
           </div>
         </div>
-      </div>
-      
-      {/* Test credentials helper */}
-      <div className="fixed bottom-4 right-4 bg-white p-4 rounded-xl border border-slate-200 shadow-lg text-xs max-w-xs text-slate-500">
-        <p className="font-bold text-slate-700 mb-1">Testing Auth?</p>
-        <p>If you haven't enabled Firebase Email Auth, test the login bypassing or use Google Auth.</p>
-        <p className="mt-2 text-brand-600 font-medium cursor-pointer hover:underline" onClick={() => loginWithGoogle()}>Quick Setup: Use Google Login</p>
+
+        {/* Footer */}
+        <p className="text-center text-slate-600 text-xs mt-6">
+          JoCRM © 2026 — Barcha huquqlar himoyalangan
+        </p>
       </div>
     </div>
   );
