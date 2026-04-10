@@ -112,7 +112,8 @@ export function ClientTimeline({ customerId }: ClientTimelineProps) {
       if (eventType === 'email') return <Mail className="w-4 h-4 text-indigo-500" />;
       if (eventType === 'meeting') return <Calendar className="w-4 h-4 text-emerald-500" />;
       return <Clock className="w-4 h-4 text-slate-500" />;
-    } else if (type === 'order') {\n      return <ShoppingCart className="w-4 h-4 text-orange-500" />;
+    } else if (type === 'order') {
+      return <ShoppingCart className="w-4 h-4 text-orange-500" />;
     }
     return <Clock className="w-4 h-4 text-slate-500" />;
   };
