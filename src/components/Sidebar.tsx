@@ -8,7 +8,9 @@ import {
   PieChart, 
   Settings as SettingsIcon, 
   LogOut,
-  ChevronRight
+  ChevronRight,
+  Trello,
+  CheckSquare
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -21,8 +23,10 @@ interface SidebarProps {
 
 const navItems = [
   { id: 'dashboard', icon: LayoutDashboard, label: 'Boshqaruv paneli' },
+  { id: 'leads', icon: Trello, label: 'Lidlar (Kanban)' },
   { id: 'customers', icon: Users, label: 'Mijozlar' },
   { id: 'projects', icon: Briefcase, label: 'Loyihalar' },
+  { id: 'tasks', icon: CheckSquare, label: 'Vazifalar' },
   { id: 'calendar', icon: Calendar, label: 'Taqvim' },
   { id: 'messages', icon: MessageSquare, label: 'Xabarlar', badge: '3' },
   { id: 'analytics', icon: PieChart, label: 'Tahlillar' },

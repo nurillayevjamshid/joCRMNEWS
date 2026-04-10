@@ -8,6 +8,9 @@ import { Projects } from './components/Projects';
 import { CalendarView } from './components/CalendarView';
 import { Messages } from './components/Messages';
 import { Analytics } from './components/Analytics';
+import { ClientProfile } from './components/ClientProfile';
+import { LeadsKanban } from './components/LeadsKanban';
+import { Tasks } from './components/Tasks';
 import { ThemeProvider } from './context/ThemeContext';
 import { ToastProvider } from './context/ToastContext';
 import { useAuth } from './context/AuthContext';
@@ -39,10 +42,23 @@ function MainContent({ activeView }: { activeView: string }) {
   }, [activeView, currentView]);
 
   const renderView = () => {
+    // Handle clientProfile:{id} format
+    if (currentView.startsWith('clientProfile:')) {
+      const customerId = currentView.split(':')[1];
+      return (
+        <ClientProfile
+          customerId={customerId}
+          onBack={() => setCurrentView('customers')}
+        />
+      );
+    }
+
     switch (currentView) {
       case 'dashboard': return <Dashboard />;
-      case 'customers': return <Customers />;
+      case 'leads': return <LeadsKanban />;
+      case 'customers': return <Customers onSelectCustomer={(id) => setCurrentView(`clientProfile:${id}`)} />;
       case 'projects': return <Projects />;
+      case 'tasks': return <Tasks />;
       case 'calendar': return <CalendarView />;
       case 'messages': return <Messages />;
       case 'analytics': return <Analytics />;
