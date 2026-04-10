@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { User, Bell, Shield, Palette, Save, Database, Loader2 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { seedService } from '../services/seedService';
+import { useAuth } from '../context/AuthContext';
 
 export function Settings() {
   const [activeTab, setActiveTab] = useState('appearance');
   const { theme, setTheme, accentColor, setAccentColor } = useTheme();
+  const { user } = useAuth();
   const [isSeeding, setIsSeeding] = useState(false);
   const [seedMessage, setSeedMessage] = useState('');
 
@@ -80,12 +82,13 @@ export function Settings() {
               <div>
                 <h3 className="text-lg font-display font-bold text-surface-900 mb-4">Profile Information</h3>
                 <div className="flex items-center gap-6 mb-6">
-                  <img 
-                    src="https://picsum.photos/seed/avatar1/100/100" 
-                    alt="Profile" 
-                    className="w-20 h-20 rounded-full object-cover border border-slate-200"
-                    referrerPolicy="no-referrer"
-                  />
+                  <div className="w-20 h-20 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center overflow-hidden border border-brand-200">
+                    {user?.photoURL ? (
+                      <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-3xl font-bold">{user?.email?.charAt(0).toUpperCase() || 'U'}</span>
+                    )}
+                  </div>
                   <div>
                     <button className="px-4 py-2 bg-white border border-slate-200 text-sm font-medium text-surface-900 rounded-xl hover:bg-slate-50 transition-colors shadow-sm">
                       Change Avatar
@@ -97,19 +100,19 @@ export function Settings() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div className="space-y-1.5">
                     <label className="text-sm font-medium text-slate-700">First Name</label>
-                    <input type="text" defaultValue="Alex" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all" />
+                    <input type="text" defaultValue={user?.displayName?.split(' ')[0] || user?.email?.split('@')[0] || ''} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all" />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-sm font-medium text-slate-700">Last Name</label>
-                    <input type="text" defaultValue="Morgan" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all" />
+                    <input type="text" defaultValue={user?.displayName?.split(' ').slice(1).join(' ') || ''} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all" />
                   </div>
                   <div className="space-y-1.5 sm:col-span-2">
                     <label className="text-sm font-medium text-slate-700">Email Address</label>
-                    <input type="email" defaultValue="alex.morgan@auracrm.com" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all" />
+                    <input type="email" defaultValue={user?.email || ''} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all" />
                   </div>
                   <div className="space-y-1.5 sm:col-span-2">
                     <label className="text-sm font-medium text-slate-700">Role</label>
-                    <input type="text" defaultValue="Sales Director" disabled className="w-full bg-slate-100 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-500 cursor-not-allowed" />
+                    <input type="text" defaultValue="Admin" disabled className="w-full bg-slate-100 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-500 cursor-not-allowed" />
                   </div>
                 </div>
               </div>

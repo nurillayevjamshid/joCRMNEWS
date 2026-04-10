@@ -59,17 +59,43 @@ export const dataService = {
    * Subscribe to a collection for real-time updates
    */
   subscribeToCollection(collectionName: string, callback: (data: any[]) => void) {
-    const q = query(collection(db, collectionName), orderBy("createdAt", "desc"));
-    return onSnapshot(q, (snapshot) => {
-      const data = snapshot.docs.map(doc => ({
-        ...doc.data(),
-        id: doc.id
-      }));
-      callback(data);
-    }, (error) => {
+    try {
+      const q = query(collection(db, collectionName), orderBy("createdAt", "desc"));
+      return onSnapshot(q, (snapshot) => {
+        const data = snapshot.docs.map(doc => ({
+          ...doc.data(),
+          id: doc.id
+        }));
+        callback(data);
+      }, (error) => {
+        const message = logFirebaseError(`subscribeToCollection(${collectionName})`, error);
+        console.error(message);
+        // Agar indeks yoki ruxsat xatosi bo'lsa, oddiy query bilan qayta urinish
+        const simpleQ = collection(db, collectionName);
+        return onSnapshot(simpleQ, (snapshot) => {
+          const data = snapshot.docs.map(doc => ({
+            ...doc.data(),
+            id: doc.id
+          }));
+          callback(data);
+        }, (fallbackError) => {
+          console.error(`[Firebase] Fallback subscription also failed for ${collectionName}:`, fallbackError);
+        });
+      });
+    } catch (error) {
       const message = logFirebaseError(`subscribeToCollection(${collectionName})`, error);
       console.error(message);
-    });
+      // Fallback: oddiy query
+      return onSnapshot(collection(db, collectionName), (snapshot) => {
+        const data = snapshot.docs.map(doc => ({
+          ...doc.data(),
+          id: doc.id
+        }));
+        callback(data);
+      }, (fallbackError) => {
+        console.error(`[Firebase] Fallback also failed for ${collectionName}:`, fallbackError);
+      });
+    }
   },
 
   /**

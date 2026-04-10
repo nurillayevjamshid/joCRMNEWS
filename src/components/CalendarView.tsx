@@ -28,7 +28,7 @@ const dotColors = {
 };
 
 export function CalendarView() {
-  const [currentDate, setCurrentDate] = useState(new Date(2025, 3, 1)); // April 2025
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(15);
 
   const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
@@ -106,7 +106,7 @@ export function CalendarView() {
             {Array.from({ length: daysInMonth }).map((_, index) => {
               const day = index + 1;
               const isSelected = day === selectedDay;
-              const isToday = day === 12 && currentDate.getMonth() === 3; // Mocking today as April 12
+              const isToday = day === new Date().getDate() && currentDate.getMonth() === new Date().getMonth() && currentDate.getFullYear() === new Date().getFullYear();
               const dayEvents = mockEvents.filter(e => e.date === day);
 
               return (

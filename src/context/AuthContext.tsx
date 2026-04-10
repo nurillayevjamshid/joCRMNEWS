@@ -28,6 +28,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
       setLoading(false);
+    }, (error) => {
+      console.error('[Auth] onAuthStateChanged error:', error);
+      setUser(null);
+      setLoading(false);
     });
 
     return unsubscribe;

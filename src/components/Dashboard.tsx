@@ -6,8 +6,10 @@ import { UpcomingTasks } from './UpcomingTasks';
 import { RecentMessages } from './RecentMessages';
 import { Users, DollarSign, Activity, Target } from 'lucide-react';
 import { dataService } from '../services/dataService';
+import { useAuth } from '../context/AuthContext';
 
 export function Dashboard() {
+  const { user } = useAuth();
   const [stats, setStats] = useState({
     activeCustomers: 0,
     totalRevenue: '$124,563', // Still static for now
@@ -31,7 +33,7 @@ export function Dashboard() {
       {/* Page Header */}
       <div className="mb-8">
         <h1 className="text-2xl sm:text-3xl font-display font-bold text-surface-900 tracking-tight">
-          Welcome back, Alex! 👋
+          Welcome back, {user?.displayName || user?.email?.split('@')[0] || 'User'}! 👋
         </h1>
         <p className="text-slate-500 mt-1">Here's what's happening with your business today.</p>
       </div>

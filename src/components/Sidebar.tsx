@@ -10,6 +10,7 @@ import {
   LogOut,
   ChevronRight
 } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -28,6 +29,7 @@ const navItems = [
 ];
 
 export function Sidebar({ isOpen, setIsOpen, activeView, setActiveView }: SidebarProps) {
+  const { user, logout } = useAuth();
   return (
     <>
       {/* Mobile Overlay */}
@@ -50,7 +52,7 @@ export function Sidebar({ isOpen, setIsOpen, activeView, setActiveView }: Sideba
             <div className="w-8 h-8 rounded-xl bg-brand-600 flex items-center justify-center shadow-sm shadow-brand-500/20">
               <div className="w-3 h-3 rounded-full bg-white" />
             </div>
-            <span className="font-display font-bold text-xl tracking-tight text-surface-900">AuraCRM</span>
+            <span className="font-display font-bold text-xl tracking-tight text-surface-900">JoCRM</span>
           </div>
         </div>
 
@@ -106,27 +108,28 @@ export function Sidebar({ isOpen, setIsOpen, activeView, setActiveView }: Sideba
 
         {/* User Profile */}
         <div className="p-4 border-t border-slate-50">
-          <button 
-            onClick={() => {
-              setActiveView('settings');
-              setIsOpen(false);
-            }}
-            className="flex items-center justify-between w-full p-2 rounded-xl hover:bg-slate-50 transition-colors group"
-          >
+          <div className="flex items-center justify-between w-full p-2 rounded-xl group">
             <div className="flex items-center gap-3">
-              <img 
-                src="https://picsum.photos/seed/avatar1/100/100" 
-                alt="User" 
-                className="w-9 h-9 rounded-full object-cover border border-slate-200"
-                referrerPolicy="no-referrer"
-              />
+              <div className="w-9 h-9 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center overflow-hidden border border-brand-200">
+                {user?.photoURL ? (
+                  <img src={user.photoURL} alt="User" className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-sm font-bold">{user?.email?.charAt(0).toUpperCase() || 'U'}</span>
+                )}
+              </div>
               <div className="text-left">
-                <div className="text-sm font-semibold text-surface-900">Alex Morgan</div>
-                <div className="text-xs text-slate-500">Sales Director</div>
+                <div className="text-sm font-semibold text-surface-900">{user?.displayName || user?.email?.split('@')[0] || 'User'}</div>
+                <div className="text-xs text-slate-500">{user?.email || ''}</div>
               </div>
             </div>
-            <LogOut className="w-4 h-4 text-slate-400 group-hover:text-red-500 transition-colors" />
-          </button>
+            <button 
+              onClick={async () => { await logout(); }}
+              className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+              title="Chiqish"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </aside>
     </>
