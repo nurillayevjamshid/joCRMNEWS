@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle2, Circle, Clock, AlertCircle, Loader2 } from 'lucide-react';
+import { CheckCircle2, Circle, Clock, AlertCircle } from 'lucide-react';
 import { dataService } from '../services/dataService';
+import { SkeletonListItem } from './Skeleton';
+import { EmptyState } from './EmptyState';
+import { ClipboardList } from 'lucide-react';
 
 interface Task {
   id: string;
@@ -53,9 +56,7 @@ export function UpcomingTasks() {
 
       <div className="flex flex-col gap-3">
         {loading ? (
-          <div className="flex items-center justify-center py-10">
-            <Loader2 className="w-6 h-6 text-brand-500 animate-spin" />
-          </div>
+          Array.from({ length: 3 }).map((_, i) => <SkeletonListItem key={i} />)
         ) : tasks.length > 0 ? (
           tasks.map((task) => (
             <div key={task.id} className="flex items-start gap-3 p-3 -mx-3 rounded-2xl hover:bg-slate-50 transition-colors group cursor-pointer" onClick={() => toggleTaskStatus(task)}>
@@ -93,9 +94,12 @@ export function UpcomingTasks() {
             </div>
           ))
         ) : (
-          <div className="text-center py-10 text-slate-400 text-sm italic">
-            Vazifalar yo'q.
-          </div>
+          <EmptyState
+            icon={ClipboardList}
+            title="Vazifalar yo'q"
+            description="Hali birorta vazifa qo'shilmagan."
+            className="py-8"
+          />
         )}
       </div>
     </div>

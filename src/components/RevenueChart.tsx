@@ -29,7 +29,7 @@ export function RevenueChart() {
           <option>O'tgan yil</option>
         </select>
       </div>
-      <div className="h-[300px] w-full flex flex-col">
+      <div className="h-[250px] sm:h-[300px] w-full flex flex-col">
         <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
           <AreaChart data={data} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
             <defs>

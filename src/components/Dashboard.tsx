@@ -7,6 +7,7 @@ import { RecentMessages } from './RecentMessages';
 import { Users, DollarSign, Activity, Target } from 'lucide-react';
 import { dataService } from '../services/dataService';
 import { useAuth } from '../context/AuthContext';
+import { SkeletonStatCard, SkeletonDashboard } from './Skeleton';
 
 export function Dashboard() {
   const { user } = useAuth();
@@ -16,10 +17,12 @@ export function Dashboard() {
     conversionRate: '14.2%',
     salesTarget: '82%'
   });
+  const [statsLoading, setStatsLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribeCustomers = dataService.subscribeToCollection('customers', (data) => {
       setStats(prev => ({ ...prev, activeCustomers: data.length }));
+      setStatsLoading(false);
     });
 
     return () => {
@@ -37,34 +40,40 @@ export function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
-        <StatCard 
-          title="Jami daromad" 
-          value={stats.totalRevenue} 
-          trend={12.5} 
-          icon={DollarSign} 
-          color="brand" 
-        />
-        <StatCard 
-          title="Faol mijozlar" 
-          value={stats.activeCustomers.toLocaleString()} 
-          trend={5.2} 
-          icon={Users} 
-          color="emerald" 
-        />
-        <StatCard 
-          title="Konversiya darajasi" 
-          value={stats.conversionRate} 
-          trend={-2.4} 
-          icon={Activity} 
-          color="rose" 
-        />
-        <StatCard 
-          title="Sotuv maqsadi" 
-          value={stats.salesTarget} 
-          trend={8.1} 
-          icon={Target} 
-          color="amber" 
-        />
+        {statsLoading ? (
+          Array.from({ length: 4 }).map((_, i) => <SkeletonStatCard key={i} />)
+        ) : (
+          <>
+            <StatCard 
+              title="Jami daromad" 
+              value={stats.totalRevenue} 
+              trend={12.5} 
+              icon={DollarSign} 
+              color="brand" 
+            />
+            <StatCard 
+              title="Faol mijozlar" 
+              value={stats.activeCustomers.toLocaleString()} 
+              trend={5.2} 
+              icon={Users} 
+              color="emerald" 
+            />
+            <StatCard 
+              title="Konversiya darajasi" 
+              value={stats.conversionRate} 
+              trend={-2.4} 
+              icon={Activity} 
+              color="rose" 
+            />
+            <StatCard 
+              title="Sotuv maqsadi" 
+              value={stats.salesTarget} 
+              trend={8.1} 
+              icon={Target} 
+              color="amber" 
+            />
+          </>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-6">

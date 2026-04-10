@@ -45,7 +45,7 @@ export function StatCard({ title, value, trend, icon: Icon, color, delay = 0 }: 
 
   return (
     <div 
-      className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm shadow-slate-200/20 hover:shadow-md hover:shadow-slate-200/30 transition-all duration-300 group hover:-translate-y-1 cursor-default"
+      className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-100 shadow-sm shadow-slate-200/20 hover:shadow-md hover:shadow-slate-200/30 transition-all duration-300 group hover:-translate-y-1 cursor-default press-scale animate-stagger"
       style={{ animationDelay: `${delay}ms` }}
     >
       <div className="flex justify-between items-start mb-4">

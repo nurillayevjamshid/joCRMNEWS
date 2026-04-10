@@ -66,7 +66,7 @@ export function Sidebar({ isOpen, setIsOpen, activeView, setActiveView }: Sideba
                   setIsOpen(false);
                 }}
                 className={`
-                  flex items-center justify-between w-full px-3 py-2.5 rounded-xl transition-all duration-200 group
+                  flex items-center justify-between w-full px-3 py-2.5 rounded-xl transition-all duration-200 group press-scale
                   ${isActive 
                     ? 'bg-brand-50 text-brand-600 font-medium' 
                     : 'text-slate-500 hover:bg-slate-50 hover:text-surface-900'}

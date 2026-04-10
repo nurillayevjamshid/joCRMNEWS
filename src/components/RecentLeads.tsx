@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { MoreHorizontal, Loader2 } from 'lucide-react';
+import { MoreHorizontal } from 'lucide-react';
 import { dataService } from '../services/dataService';
+import { SkeletonListItem } from './Skeleton';
+import { EmptyState } from './EmptyState';
+import { Users } from 'lucide-react';
 
 interface Lead {
   id: string;
@@ -59,9 +62,7 @@ export function RecentLeads() {
 
       <div className="flex flex-col gap-4">
         {loading ? (
-          <div className="flex items-center justify-center py-10">
-            <Loader2 className="w-6 h-6 text-brand-500 animate-spin" />
-          </div>
+          Array.from({ length: 3 }).map((_, i) => <SkeletonListItem key={i} />)
         ) : leads.length > 0 ? (
           leads.map((lead) => (
             <div key={lead.id} className="flex items-center justify-between p-3 -mx-3 rounded-2xl hover:bg-slate-50 transition-colors group">
@@ -91,9 +92,12 @@ export function RecentLeads() {
             </div>
           ))
         ) : (
-          <div className="text-center py-10 text-slate-400 text-sm italic">
-            Lidlar yo'q.
-          </div>
+          <EmptyState
+            icon={Users}
+            title="Lidlar yo'q"
+            description="Hali birorta lid qo'shilmagan."
+            className="py-8"
+          />
         )}
       </div>
     </div>

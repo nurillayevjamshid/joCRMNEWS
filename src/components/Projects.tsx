@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Search, Filter, Plus, MoreHorizontal, Clock, Loader2, X, Trash2, Edit3 } from 'lucide-react';
 import { dataService } from '../services/dataService';
 import { useToast } from '../context/ToastContext';
+import { SkeletonProjectCard } from './Skeleton';
+import { EmptyProjects, EmptySearch } from './EmptyState';
 
 interface Project {
   id: string;
@@ -193,13 +195,14 @@ export function Projects() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 min-h-[300px]">
         {loading ? (
-          <div className="col-span-full flex flex-col items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 text-brand-500 animate-spin mb-4" />
-            <p className="text-slate-500 text-sm">Loyihalar yuklanmoqda...</p>
-          </div>
+          Array.from({ length: 6 }).map((_, i) => <SkeletonProjectCard key={i} />)
         ) : filteredProjects.length > 0 ? (
-          filteredProjects.map((project) => (
-            <div key={project.id} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm shadow-slate-200/20 hover:shadow-md hover:shadow-slate-200/30 transition-all group shrink-0 relative">
+          filteredProjects.map((project, index) => (
+            <div 
+              key={project.id} 
+              className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm shadow-slate-200/20 hover:shadow-md hover:shadow-slate-200/30 transition-all group shrink-0 relative animate-stagger press-scale"
+              style={{ animationDelay: `${index * 60}ms` }}
+            >
               <div className="flex items-start justify-between mb-4">
                 <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${getStatusStyle(project.status)}`}>
                   {normalizeStatus(project.status)}
@@ -278,8 +281,12 @@ export function Projects() {
             </div>
           ))
         ) : (
-          <div className="col-span-full py-12 text-center text-slate-500 bg-white rounded-3xl border border-slate-100 border-dashed">
-            Loyihalar topilmadi.
+          <div className="col-span-full">
+            {searchTerm ? (
+              <EmptySearch query={searchTerm} />
+            ) : (
+              <EmptyProjects onAdd={openAddModal} />
+            )}
           </div>
         )}
       </div>

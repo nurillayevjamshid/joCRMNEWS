@@ -3,6 +3,8 @@ import { Search, Phone, Video, MoreVertical, Paperclip, Smile, Send, ArrowLeft, 
 import { dataService } from '../services/dataService';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { SkeletonChatList } from './Skeleton';
+import { EmptyMessages } from './EmptyState';
 
 /* ── Types ─────────────────────────────────────────────────────── */
 
@@ -103,7 +105,7 @@ export function Messages() {
     c.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const totalUnread = Object.values(unreadCounts).reduce((a, b) => a + b, 0);
+  const totalUnread = (Object.values(unreadCounts) as number[]).reduce((a, b) => a + b, 0);
 
   /* Auto-scroll */
   useEffect(() => {
@@ -523,13 +525,7 @@ export function Messages() {
             </div>
           </>
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center text-center opacity-60">
-            <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mb-4">
-              <MessageSquare className="w-10 h-10 text-slate-300" />
-            </div>
-            <h2 className="text-xl font-display font-bold text-surface-900">Xabarlar</h2>
-            <p className="text-sm text-slate-500 mt-2">Suhbatni boshlash uchun kontakt tanlang.</p>
-          </div>
+          <EmptyMessages />
         )}
       </div>
 

@@ -55,8 +55,8 @@ export function Settings() {
       </div>
 
       <div className="bg-white rounded-3xl border border-slate-100 shadow-sm shadow-slate-200/20 overflow-hidden flex flex-col md:flex-row min-h-[600px]">
-        <div className="w-full md:w-64 bg-slate-50/50 border-r border-slate-100 p-6">
-          <nav className="flex flex-row md:flex-col gap-2 overflow-x-auto pb-4 md:pb-0 scrollbar-hide">
+        <div className="w-full md:w-64 bg-slate-50/50 border-b md:border-b-0 md:border-r border-slate-100 p-4 md:p-6">
+          <nav className="flex flex-row md:flex-col gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
             {tabs.map((tab) => (
               <button
                 key={tab.id}

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Plus, Clock, MapPin, Video, Users, X, Loader2, Trash2, Edit3 } from 'lucide-react';
 import { dataService } from '../services/dataService';
 import { useToast } from '../context/ToastContext';
+import { SkeletonCalendar } from './Skeleton';
+import { EmptyCalendar } from './EmptyState';
 
 interface CalendarEvent {
   id: string;
@@ -274,9 +276,7 @@ export function CalendarView() {
 
           <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
             {loading ? (
-              <div className="flex items-center justify-center py-20">
-                <Loader2 className="w-8 h-8 text-brand-500 animate-spin" />
-              </div>
+              <SkeletonCalendar />
             ) : selectedDateEvents.length > 0 ? (
               <div className="space-y-4">
                 {selectedDateEvents.map((event) => (
@@ -325,20 +325,7 @@ export function CalendarView() {
                 ))}
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center h-full text-center opacity-60">
-                <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-4">
-                  <Clock className="w-8 h-8 text-slate-300" />
-                </div>
-                <h4 className="text-sm font-semibold text-surface-900">Tadbirlar yo'q</h4>
-                <p className="text-xs text-slate-500 mt-1">Bu kunda rejalashtirilgan tadbir mavjud emas</p>
-                <button
-                  onClick={openAddModal}
-                  className="mt-4 flex items-center gap-2 px-4 py-2 bg-brand-50 text-brand-600 text-sm font-medium rounded-xl hover:bg-brand-100 transition-colors"
-                >
-                  <Plus className="w-4 h-4" />
-                  Tadbir qo'shish
-                </button>
-              </div>
+              <EmptyCalendar onAdd={openAddModal} />
             )}
           </div>
         </div>

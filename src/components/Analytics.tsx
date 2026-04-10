@@ -4,6 +4,7 @@ import {
   BarChart, Bar, PieChart, Pie, Cell, Legend
 } from 'recharts';
 import { Calendar, Download, TrendingUp, Users, DollarSign, Activity, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { SkeletonStatCard } from './Skeleton';
 
 const revenueData = [
   { name: 'Yan', revenue: 4000, expenses: 2400 },
@@ -72,27 +73,32 @@ export function Analytics() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6">
         {[
           { title: 'Jami daromad', value: '$124,563.00', trend: '+14.5%', isPositive: true, icon: DollarSign, color: 'brand' },
           { title: 'Faol foydalanuvchilar', value: '45,231', trend: '+22.1%', isPositive: true, icon: Users, color: 'emerald' },
           { title: 'Konversiya darajasi', value: '3.24%', trend: '-1.4%', isPositive: false, icon: Activity, color: 'rose' },
           { title: 'Rad etish darajasi', value: '42.3%', trend: '-5.2%', isPositive: true, icon: TrendingUp, color: 'amber' },
         ].map((stat, index) => (
-          <div key={index} className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm shadow-slate-200/20 hover:shadow-md transition-shadow">
+          <div key={index} className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-100 shadow-sm shadow-slate-200/20 hover:shadow-md transition-all animate-stagger" style={{ animationDelay: `${index * 80}ms` }}>
             <div className="flex items-center justify-between mb-4">
-              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center bg-${stat.color}-50 text-${stat.color}-600`}>
-                <stat.icon className="w-6 h-6" />
+              <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center ${
+                stat.color === 'brand' ? 'bg-brand-50 text-brand-600' :
+                stat.color === 'emerald' ? 'bg-emerald-50 text-emerald-600' :
+                stat.color === 'rose' ? 'bg-rose-50 text-rose-600' :
+                'bg-amber-50 text-amber-600'
+              }`}>
+                <stat.icon className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
-              <div className={`flex items-center gap-1 text-sm font-semibold px-2.5 py-1 rounded-full ${
+              <div className={`flex items-center gap-1 text-xs sm:text-sm font-semibold px-2 sm:px-2.5 py-1 rounded-full ${
                 stat.isPositive ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
               }`}>
-                {stat.isPositive ? <ArrowUpRight className="w-3.5 h-3.5" /> : <ArrowDownRight className="w-3.5 h-3.5" />}
+                {stat.isPositive ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
                 {stat.trend}
               </div>
             </div>
-            <h3 className="text-slate-500 text-sm font-medium mb-1">{stat.title}</h3>
-            <p className="text-2xl font-display font-bold text-surface-900">{stat.value}</p>
+            <h3 className="text-slate-500 text-xs sm:text-sm font-medium mb-1">{stat.title}</h3>
+            <p className="text-xl sm:text-2xl font-display font-bold text-surface-900">{stat.value}</p>
           </div>
         ))}
       </div>
@@ -106,7 +112,7 @@ export function Analytics() {
               <p className="text-sm text-slate-500">Tanlangan davr uchun moliyaviy ko'rsatkichlar</p>
             </div>
           </div>
-          <div className="h-[300px] w-full flex flex-col">
+          <div className="h-[250px] sm:h-[300px] w-full flex flex-col">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <AreaChart data={revenueData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
@@ -138,7 +144,7 @@ export function Analytics() {
             <h2 className="text-lg font-display font-bold text-surface-900">Trafik manbalari</h2>
             <p className="text-sm text-slate-500">Foydalanuvchilar qayerdan keladi</p>
           </div>
-          <div className="h-[250px] w-full flex items-center justify-center flex-col">
+          <div className="h-[200px] sm:h-[250px] w-full flex items-center justify-center flex-col">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <PieChart>
                 <Pie
@@ -181,7 +187,7 @@ export function Analytics() {
               <p className="text-sm text-slate-500">Faol va yangi foydalanuvchilar</p>
             </div>
           </div>
-          <div className="h-[300px] w-full flex flex-col">
+          <div className="h-[250px] sm:h-[300px] w-full flex flex-col">
             <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <BarChart data={activityData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }} barSize={20}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />

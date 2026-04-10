@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { MessageSquare, ArrowRight, Loader2 } from 'lucide-react';
+import { MessageSquare, ArrowRight } from 'lucide-react';
 import { dataService } from '../services/dataService';
+import { SkeletonListItem } from './Skeleton';
+import { EmptyMessages } from './EmptyState';
 
 interface Message {
   id: string;
@@ -38,9 +40,7 @@ export function RecentMessages() {
 
       <div className="flex flex-col gap-4 flex-1">
         {loading ? (
-          <div className="flex items-center justify-center py-10">
-            <Loader2 className="w-6 h-6 text-brand-500 animate-spin" />
-          </div>
+          Array.from({ length: 3 }).map((_, i) => <SkeletonListItem key={i} />)
         ) : messages.length > 0 ? (
           messages.map((msg) => (
             <div key={msg.id} className="flex items-center gap-3 p-3 -mx-3 rounded-2xl hover:bg-slate-50 transition-colors cursor-pointer group">
@@ -69,9 +69,7 @@ export function RecentMessages() {
             </div>
           ))
         ) : (
-          <div className="text-center py-10 text-slate-400 text-sm italic">
-            Xabarlar yo'q.
-          </div>
+          <EmptyMessages />
         )}
       </div>
       
