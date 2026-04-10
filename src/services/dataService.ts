@@ -20,7 +20,7 @@ export const dataService = {
    */
   async saveData(collectionName: string, data: any, id?: string) {
     try {
-      const timestampId = id || Math.floor(Date.now() / 1000).toString();
+      const timestampId = id || Date.now().toString();
       
       const documentData = {
         ...data,
@@ -57,45 +57,40 @@ export const dataService = {
 
   /**
    * Subscribe to a collection for real-time updates
+   * Avval orderBy bilan urinadi, xato bo'lsa oddiy query ga o'tadi
    */
   subscribeToCollection(collectionName: string, callback: (data: any[]) => void) {
-    try {
-      const q = query(collection(db, collectionName), orderBy("createdAt", "desc"));
-      return onSnapshot(q, (snapshot) => {
-        const data = snapshot.docs.map(doc => ({
-          ...doc.data(),
-          id: doc.id
-        }));
-        callback(data);
-      }, (error) => {
-        const message = logFirebaseError(`subscribeToCollection(${collectionName})`, error);
-        console.error(message);
-        // Agar indeks yoki ruxsat xatosi bo'lsa, oddiy query bilan qayta urinish
-        const simpleQ = collection(db, collectionName);
-        return onSnapshot(simpleQ, (snapshot) => {
+    let fallbackUsed = false;
+
+    const orderedQuery = query(collection(db, collectionName), orderBy("createdAt", "desc"));
+    
+    const unsubscribe = onSnapshot(orderedQuery, (snapshot) => {
+      const data = snapshot.docs.map(doc => ({
+        ...doc.data(),
+        id: doc.id
+      }));
+      callback(data);
+    }, async (error) => {
+      const message = logFirebaseError(`subscribeToCollection(${collectionName})`, error);
+      console.warn(`[Firebase] orderBy query xato, oddiy query bilan qayta urinilmoqda:`, message);
+      
+      if (!fallbackUsed) {
+        fallbackUsed = true;
+        // Oddiy query bilan qayta obuna
+        const simpleRef = collection(db, collectionName);
+        onSnapshot(simpleRef, (snapshot) => {
           const data = snapshot.docs.map(doc => ({
             ...doc.data(),
             id: doc.id
           }));
           callback(data);
         }, (fallbackError) => {
-          console.error(`[Firebase] Fallback subscription also failed for ${collectionName}:`, fallbackError);
+          console.error(`[Firebase] Oddiy query ham xato: ${collectionName}`, fallbackError);
         });
-      });
-    } catch (error) {
-      const message = logFirebaseError(`subscribeToCollection(${collectionName})`, error);
-      console.error(message);
-      // Fallback: oddiy query
-      return onSnapshot(collection(db, collectionName), (snapshot) => {
-        const data = snapshot.docs.map(doc => ({
-          ...doc.data(),
-          id: doc.id
-        }));
-        callback(data);
-      }, (fallbackError) => {
-        console.error(`[Firebase] Fallback also failed for ${collectionName}:`, fallbackError);
-      });
-    }
+      }
+    });
+
+    return unsubscribe;
   },
 
   /**

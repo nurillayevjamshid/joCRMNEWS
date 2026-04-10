@@ -29,7 +29,7 @@ export function Customers() {
     status: 'Faol',
     spent: '$0',
     joined: new Date().toLocaleDateString('uz-UZ', { month: 'short', day: '2-digit', year: 'numeric' }),
-    avatar: `https://picsum.photos/seed/${Math.random()}/100/100`,
+    avatar: `https://picsum.photos/seed/${Date.now()}/100/100`,
   });
 
   useEffect(() => {
@@ -45,7 +45,8 @@ export function Customers() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await dataService.saveData('customers', newCustomer);
+      const result = await dataService.saveData('customers', newCustomer);
+      console.log('[Mijoz qo\'shildi]', result);
       setIsAddModalOpen(false);
       setNewCustomer({
         name: '',
@@ -54,7 +55,7 @@ export function Customers() {
         status: 'Faol',
         spent: '$0',
         joined: new Date().toLocaleDateString('uz-UZ', { month: 'short', day: '2-digit', year: 'numeric' }),
-        avatar: `https://picsum.photos/seed/${Math.random()}/100/100`,
+        avatar: `https://picsum.photos/seed/${Date.now()}/100/100`,
       });
     } catch (error) {
       console.error("Mijoz qo'shishda xatolik:", error);
@@ -73,11 +74,18 @@ export function Customers() {
     }
   };
 
+  // Statusni standartlashtirish: eski (Active/Inactive) va yangi (Faol/Nofaol) formatlarni qo'llab-quvvatlash
+  const normalizeStatus = (status: string) => {
+    if (status === 'Active' || status === 'Faol') return 'Faol';
+    if (status === 'Inactive' || status === 'Nofaol') return 'Nofaol';
+    return status;
+  };
+
   const filteredCustomers = customers.filter(customer => {
     const matchesSearch = (customer.name?.toLowerCase() || '').includes(searchTerm.toLowerCase()) || 
                           (customer.email?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
                           (customer.company?.toLowerCase() || '').includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'Barchasi' || customer.status === statusFilter;
+    const matchesStatus = statusFilter === 'Barchasi' || normalizeStatus(customer.status) === statusFilter;
     
     return matchesSearch && matchesStatus;
   });
@@ -175,11 +183,11 @@ export function Customers() {
                       </td>
                       <td className="px-6 py-4">
                         <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${
-                          customer.status === 'Faol' || customer.status === 'Active'
+                          normalizeStatus(customer.status) === 'Faol'
                             ? 'bg-emerald-50 text-emerald-600' 
                             : 'bg-slate-100 text-slate-500'
                         }`}>
-                          {customer.status === 'Active' ? 'Faol' : customer.status === 'Inactive' ? 'Nofaol' : customer.status}
+                          {normalizeStatus(customer.status)}
                         </span>
                       </td>
                       <td className="px-6 py-4">
