@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, Download, Plus, MoreHorizontal, ChevronLeft, ChevronRight, X, Loader2 } from 'lucide-react';
 import { dataService } from '../services/dataService';
+import { useToast } from '../context/ToastContext';
 
 interface Customer {
   id: string;
@@ -15,6 +16,7 @@ interface Customer {
 }
 
 export function Customers() {
+  const { addToast } = useToast();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -47,6 +49,7 @@ export function Customers() {
     try {
       const result = await dataService.saveData('customers', newCustomer);
       console.log('[Mijoz qo\'shildi]', result);
+      addToast('success', 'Mijoz muvaffaqiyatli qo\'shildi!');
       setIsAddModalOpen(false);
       setNewCustomer({
         name: '',
@@ -59,6 +62,7 @@ export function Customers() {
       });
     } catch (error) {
       console.error("Mijoz qo'shishda xatolik:", error);
+      addToast('error', "Mijoz qo'shishda xatolik yuz berdi");
     } finally {
       setIsSubmitting(false);
     }
@@ -68,8 +72,10 @@ export function Customers() {
     if (window.confirm('Haqiqatanam bu mijozni o\'chirmoqchimisiz?')) {
       try {
         await dataService.deleteData('customers', id);
+        addToast('success', 'Mijoz muvaffaqiyatli o\'chirildi');
       } catch (error) {
         console.error("Mijozni o'chirishda xatolik:", error);
+        addToast('error', "Mijozni o'chirishda xatolik yuz berdi");
       }
     }
   };

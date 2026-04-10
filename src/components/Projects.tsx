@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, Plus, MoreHorizontal, Clock, Loader2, X, Trash2, Edit3 } from 'lucide-react';
 import { dataService } from '../services/dataService';
+import { useToast } from '../context/ToastContext';
 
 interface Project {
   id: string;
@@ -54,6 +55,7 @@ const emptyForm = {
 };
 
 export function Projects() {
+  const { addToast } = useToast();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -109,14 +111,17 @@ export function Projects() {
     try {
       if (editingId) {
         await dataService.updateData('projects', editingId, form);
+        addToast('success', 'Loyiha muvaffaqiyatli yangilandi!');
       } else {
         await dataService.saveData('projects', form);
+        addToast('success', 'Loyiha muvaffaqiyatli qo\'shildi!');
       }
       setIsModalOpen(false);
       setForm(emptyForm);
       setEditingId(null);
     } catch (error) {
       console.error("Loyihani saqlashda xatolik:", error);
+      addToast('error', "Loyihani saqlashda xatolik yuz berdi");
     } finally {
       setIsSubmitting(false);
     }
@@ -127,8 +132,10 @@ export function Projects() {
       try {
         await dataService.deleteData('projects', id);
         setMenuOpenId(null);
+        addToast('success', "Loyiha muvaffaqiyatli o'chirildi");
       } catch (error) {
         console.error("Loyihani o'chirishda xatolik:", error);
+        addToast('error', "Loyihani o'chirishda xatolik yuz berdi");
       }
     }
   };

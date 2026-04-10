@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Plus, Clock, MapPin, Video, Users, X, Loader2, Trash2, Edit3 } from 'lucide-react';
 import { dataService } from '../services/dataService';
+import { useToast } from '../context/ToastContext';
 
 interface CalendarEvent {
   id: string;
@@ -52,6 +53,7 @@ const emptyForm = {
 };
 
 export function CalendarView() {
+  const { addToast } = useToast();
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -129,14 +131,17 @@ export function CalendarView() {
     try {
       if (editingId) {
         await dataService.updateData('calendarEvents', editingId, form);
+        addToast('success', 'Tadbir muvaffaqiyatli yangilandi!');
       } else {
         await dataService.saveData('calendarEvents', form);
+        addToast('success', 'Tadbir muvaffaqiyatli qo\'shildi!');
       }
       setIsModalOpen(false);
       setForm(emptyForm);
       setEditingId(null);
     } catch (error) {
       console.error("Tadbirni saqlashda xatolik:", error);
+      addToast('error', "Tadbirni saqlashda xatolik yuz berdi");
     } finally {
       setIsSubmitting(false);
     }
@@ -146,8 +151,10 @@ export function CalendarView() {
     if (window.confirm("Haqiqatanam bu tadbirni o'chirmoqchimisiz?")) {
       try {
         await dataService.deleteData('calendarEvents', id);
+        addToast('success', "Tadbir muvaffaqiyatli o'chirildi");
       } catch (error) {
         console.error("Tadbirni o'chirishda xatolik:", error);
+        addToast('error', "Tadbirni o'chirishda xatolik yuz berdi");
       }
     }
   };
