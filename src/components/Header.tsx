@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Bell, Menu, LogOut, User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { NotificationCenter } from './NotificationCenter';
+import { notificationService } from '../services/notificationService';
 
 interface HeaderProps {
   setSidebarOpen: (isOpen: boolean) => void;
@@ -8,6 +10,25 @@ interface HeaderProps {
 
 export function Header({ setSidebarOpen }: HeaderProps) {
   const { user, logout } = useAuth();
+  const [isNotificationCenterOpen, setIsNotificationCenterOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    const loadUnreadCount = async () => {
+      const count = await notificationService.getUnreadCount();
+      setUnreadCount(count);
+    };
+
+    loadUnreadCount();
+
+    // Subscribe to real-time updates
+    const unsubscribe = notificationService.subscribeToNotifications(async () => {
+      const count = await notificationService.getUnreadCount();
+      setUnreadCount(count);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <header className="h-16 bg-white/80 dark:bg-surface-900/80 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 sticky top-0 z-30 flex items-center justify-between px-4 sm:px-6 lg:px-8 transition-colors duration-300">
@@ -40,9 +61,14 @@ export function Header({ setSidebarOpen }: HeaderProps) {
           <Search className="w-5 h-5" />
         </button>
 
-        <button className="relative p-2 rounded-full text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+        <button 
+          onClick={() => setIsNotificationCenterOpen(true)}
+          className="relative p-2 rounded-full text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+        >
           <Bell className="w-5 h-5" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-surface-900 transition-colors" />
+          {unreadCount > 0 && (
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-surface-900 transition-colors" />
+          )}
         </button>
 
         <div className="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-700">
@@ -68,6 +94,12 @@ export function Header({ setSidebarOpen }: HeaderProps) {
           </button>
         </div>
       </div>
+
+      {/* Notification Center */}
+      <NotificationCenter 
+        isOpen={isNotificationCenterOpen} 
+        onClose={() => setIsNotificationCenterOpen(false)}
+      />
     </header>
   );
 }

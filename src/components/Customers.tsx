@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, Download, Plus, MoreHorizontal, ChevronLeft, ChevronRight, X, Loader2 } from 'lucide-react';
 import { dataService } from '../services/dataService';
+import { tagService } from '../services/tagService';
 import { useToast } from '../context/ToastContext';
+import { TagBadges } from './TagBadge';
+import { TagsFilter } from './TagsFilter';
 
 interface Customer {
   id: string;
@@ -27,6 +30,8 @@ export function Customers({ onSelectCustomer }: CustomersProps) {
   const [statusFilter, setStatusFilter] = useState('Barchasi');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [matchAllTags, setMatchAllTags] = useState(false);
 
   const [newCustomer, setNewCustomer] = useState({
     name: '',
@@ -97,11 +102,32 @@ export function Customers({ onSelectCustomer }: CustomersProps) {
                           (customer.company?.toLowerCase() || '').includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'Barchasi' || normalizeStatus(customer.status) === statusFilter;
     
-    return matchesSearch && matchesStatus;
+    // Tag filter logic
+    let matchesTags = true;
+    if (selectedTags.length > 0) {
+      const customerTags = (customer as any).tags || [];
+      if (matchAllTags) {
+        matchesTags = selectedTags.every(tag => customerTags.includes(tag));
+      } else {
+        matchesTags = selectedTags.some(tag => customerTags.includes(tag));
+      }
+    }
+    
+    return matchesSearch && matchesStatus && matchesTags;
   });
+
+  const handleTagFilterChange = (tags: string[], matchAll: boolean) => {
+    setSelectedTags(tags);
+    setMatchAllTags(matchAll);
+  };
 
   return (
     <div className="max-w-7xl mx-auto w-full animate-in fade-in duration-500">
+      {/* Tags Filter */}
+      <div className="mb-6">
+        <TagsFilter onFilterChange={handleTagFilterChange} entityType="customer" />
+      </div>
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl sm:text-3xl font-display font-bold text-surface-900 tracking-tight">
@@ -164,7 +190,8 @@ export function Customers({ onSelectCustomer }: CustomersProps) {
                 <tr className="bg-slate-50/50 border-b border-slate-100">
                   <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Mijoz</th>
                   <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Kompaniya</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Holat</th>
+                      <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Teglar</th>
+                      <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Holat</th>
                   <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Jami sarflagan</th>
                   <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Qo'shilgan</th>
                   <th className="px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider text-right">Amallar</th>
@@ -194,6 +221,13 @@ export function Customers({ onSelectCustomer }: CustomersProps) {
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm font-medium text-slate-700">{customer.company}</div>
+                      </td>
+                      <td className="px-6 py-4">
+                        {(customer as any).tags && (customer as any).tags.length > 0 ? (
+                          <TagBadges tags={(customer as any).tags} variant="small" maxDisplay={2} />
+                        ) : (
+                          <span className="text-xs text-slate-400">Teg yo'q</span>
+                        )}
                       </td>
                       <td className="px-6 py-4">
                         <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${
