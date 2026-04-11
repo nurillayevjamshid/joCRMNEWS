@@ -23,6 +23,8 @@ export function ClientOrders({ customerId }: ClientOrdersProps) {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [newOrder, setNewOrder] = useState({
     orderId: '',
@@ -91,6 +93,46 @@ export function ClientOrders({ customerId }: ClientOrdersProps) {
         console.error('Buyurtmani o\'chirishda xatolik:', error);
         addToast('error', 'Buyurtmani o\'chirishda xatolik yuz berdi');
       }
+    }
+  };
+
+  const handleEditOrder = (order: Order) => {
+    setSelectedOrder(order);
+    const dateStr = order.date?.toDate 
+      ? order.date.toDate().toISOString().split('T')[0] 
+      : new Date(order.date).toISOString().split('T')[0];
+    
+    setNewOrder({
+      orderId: order.orderId,
+      date: dateStr,
+      amount: order.amount,
+      status: order.status,
+      items: order.items || '',
+    });
+    setIsEditModalOpen(true);
+  };
+
+  const handleUpdateOrder = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedOrder) return;
+    
+    setIsSubmitting(true);
+    try {
+      await dataService.updateData('clientOrders', selectedOrder.id, {
+        orderId: newOrder.orderId,
+        date: new Date(newOrder.date),
+        amount: newOrder.amount,
+        status: newOrder.status,
+        items: newOrder.items,
+      });
+      addToast('success', 'Buyurtma yangilandi');
+      setIsEditModalOpen(false);
+      setSelectedOrder(null);
+    } catch (error) {
+      console.error('Error updating order:', error);
+      addToast('error', 'Yangilashda xatolik yuz berdi');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -181,12 +223,24 @@ export function ClientOrders({ customerId }: ClientOrdersProps) {
                     <div className="text-sm text-slate-600 truncate">{order.items || '-'}</div>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <button
-                      onClick={() => handleDeleteOrder(order.id)}
-                      className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors opacity-0 group-hover:opacity-100"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        onClick={() => handleEditOrder(order)}
+                        className="p-2 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-xl transition-colors"
+                        title="Tahrirlash"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={() => handleDeleteOrder(order.id)}
+                        className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+                        title="O'chirish"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -200,21 +254,27 @@ export function ClientOrders({ customerId }: ClientOrdersProps) {
         )}
       </div>
 
-      {/* Add Order Modal */}
-      {isAddModalOpen && (
+      {/* Add/Edit Order Modal */}
+      {(isAddModalOpen || isEditModalOpen) && (
         <div className="fixed inset-0 bg-surface-900/20 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl border border-slate-100 shadow-xl w-full max-w-md">
+          <div className="bg-white rounded-3xl border border-slate-100 shadow-xl w-full max-w-md animate-scale-in">
             <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-              <h3 className="text-lg font-display font-bold text-surface-900">Buyurtma qo'shish</h3>
+              <h3 className="text-lg font-display font-bold text-surface-900">
+                {isEditModalOpen ? 'Buyurtmani tahrirlash' : 'Buyurtma qo\'shish'}
+              </h3>
               <button
-                onClick={() => setIsAddModalOpen(false)}
-                className="text-slate-400 hover:text-surface-900"
+                onClick={() => {
+                  setIsAddModalOpen(false);
+                  setIsEditModalOpen(false);
+                  setSelectedOrder(null);
+                }}
+                className="text-slate-400 hover:text-surface-900 transition-colors"
               >
                 ✕
               </button>
             </div>
 
-            <form onSubmit={handleAddOrder} className="p-6 space-y-4">
+            <form onSubmit={isEditModalOpen ? handleUpdateOrder : handleAddOrder} className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">Buyurtma ID</label>
                 <input
@@ -274,7 +334,11 @@ export function ClientOrders({ customerId }: ClientOrdersProps) {
               <div className="flex gap-3 pt-4">
                 <button
                   type="button"
-                  onClick={() => setIsAddModalOpen(false)}
+                  onClick={() => {
+                    setIsAddModalOpen(false);
+                    setIsEditModalOpen(false);
+                    setSelectedOrder(null);
+                  }}
                   className="flex-1 px-4 py-2 bg-slate-100 text-slate-700 text-sm font-medium rounded-xl hover:bg-slate-200 transition-colors"
                 >
                   Bekor qilish
