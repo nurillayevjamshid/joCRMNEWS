@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fixture — Header mobile search overlay</title>
+    <!--
+      Fixture for the Header mobile-search overlay fix (commit bfd32dc).
+      The pre-fix header had a tiny inline search icon that, when tapped,
+      did nothing on mobile; the fix introduces a full-screen fixed overlay.
+
+      Append ?broken=1 to drop the overlay markup so the regression test
+      can confirm the bug (no full-screen search on mobile).
+    -->
+    <!-- Compiled CSS is injected by the spec via page.addStyleTag. -->
+    <style>
+      html, body { margin: 0; padding: 0; }
+    </style>
+  </head>
+  <body>
+    <header class="h-16 bg-white/80 border-b border-slate-100 sticky top-0 z-30 flex items-center justify-between px-4">
+      <div class="flex items-center gap-4">
+        <button class="p-2 -ml-2 rounded-lg text-slate-500 lg:hidden">☰</button>
+        <div class="hidden sm:flex items-center gap-2 text-sm text-slate-500">
+          <span class="font-medium text-surface-900">Boshqaruv paneli</span>
+          <span>/</span>
+          <span>Umumiy ko'rinish</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 sm:gap-5">
+        <div class="relative hidden md:block">
+          <input type="text" placeholder="Qidirish..."
+                 class="w-64 pl-9 pr-4 py-2 bg-slate-50 border border-slate-100 rounded-full text-sm" />
+        </div>
+        <button id="mobile-search-btn"
+                class="md:hidden p-2 rounded-full text-slate-500 hover:bg-slate-50">
+          🔍
+        </button>
+      </div>
+    </header>
+
+    <!-- Full-screen mobile search overlay (added by the fix) -->
+    <div id="mobile-search-overlay"
+         class="fixed inset-0 z-50 bg-white md:hidden"
+         style="display: none;">
+      <div class="flex items-center gap-3 px-4 h-16 border-b border-slate-100">
+        <span>🔍</span>
+        <input id="mobile-search-input" type="text" placeholder="Qidirish..." autofocus
+               class="flex-1 text-lg font-medium text-surface-900 focus:outline-none bg-transparent" />
+        <button id="mobile-search-close"
+                class="p-2 text-slate-400 hover:text-surface-900 hover:bg-slate-50 rounded-xl">
+          ×
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const params = new URLSearchParams(location.search);
+      const broken = params.get('broken') === '1';
+      const btn = document.getElementById('mobile-search-btn');
+      const overlay = document.getElementById('mobile-search-overlay');
+      const closeBtn = document.getElementById('mobile-search-close');
+
+      if (broken) {
+        // Reproduce the pre-fix behaviour: tapping the search icon
+        // does not open a full-screen overlay.
+        overlay.remove();
+        btn.addEventListener('click', () => { /* no-op, matches pre-fix */ });
+      } else {
+        btn.addEventListener('click', () => {
+          overlay.style.display = 'block';
+          // Mirror React's autoFocus={true} on the mobile search input.
+          document.getElementById('mobile-search-input').focus();
+        });
+        closeBtn.addEventListener('click', () => { overlay.style.display = 'none'; });
+      }
+    </script>
+  </body>
+</html>

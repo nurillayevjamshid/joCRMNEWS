@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fixture — Settings tab nav</title>
+    <!--
+      Fixture for the Settings tab-nav mobile fix (commit 0832d37 + bfd32dc).
+      The tab nav switches from a vertical column on desktop to a horizontal
+      scrollable row on mobile. The scrollbar is hidden via the new
+      `.scrollbar-hide` utility and the right border becomes a bottom
+      border (`border-b md:border-b-0 md:border-r`) so the tabs do not
+      get a stray vertical line on mobile.
+
+      Append ?broken=1 to restore the pre-fix markup.
+    -->
+    <!-- Compiled CSS is injected by the spec via page.addStyleTag. -->
+    <style>
+      html, body { margin: 0; padding: 0; }
+    </style>
+  </head>
+  <body>
+    <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden flex flex-col md:flex-row min-h-[600px]">
+      <div id="tabs-container"
+           class="w-full md:w-64 bg-slate-50/50 border-b md:border-b-0 md:border-r border-slate-100 p-4 md:p-6">
+        <nav id="tabs-nav"
+             class="flex flex-row md:flex-col gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
+          <button class="px-3 py-2 rounded-xl whitespace-nowrap bg-white shadow-sm">Umumiy</button>
+          <button class="px-3 py-2 rounded-xl whitespace-nowrap">Hisob ma'lumotlari</button>
+          <button class="px-3 py-2 rounded-xl whitespace-nowrap">Bildirishnomalar</button>
+          <button class="px-3 py-2 rounded-xl whitespace-nowrap">Maxfiylik va xavfsizlik</button>
+          <button class="px-3 py-2 rounded-xl whitespace-nowrap">Ulangan xizmatlar</button>
+          <button class="px-3 py-2 rounded-xl whitespace-nowrap">Ko'rinish va mavzu</button>
+          <button class="px-3 py-2 rounded-xl whitespace-nowrap">Til va mintaqa</button>
+          <button class="px-3 py-2 rounded-xl whitespace-nowrap">Kengaytirilgan sozlamalar</button>
+        </nav>
+      </div>
+      <div class="flex-1 p-6">
+        <h3 class="font-display font-bold">Umumiy sozlamalar</h3>
+      </div>
+    </div>
+
+    <script>
+      const params = new URLSearchParams(location.search);
+      if (params.get('broken') === '1') {
+        // Reproduce the pre-fix markup:
+        //  - Remove `scrollbar-hide` so the webkit scrollbar is visible.
+        //  - Swap `border-b md:border-b-0 md:border-r` back to just `border-r`
+        //    so there's a vertical border on mobile too.
+        const nav = document.getElementById('tabs-nav');
+        nav.classList.remove('scrollbar-hide');
+
+        const container = document.getElementById('tabs-container');
+        container.classList.remove('border-b', 'md:border-b-0', 'md:border-r');
+        container.classList.add('border-r');
+      }
+    </script>
+  </body>
+</html>
