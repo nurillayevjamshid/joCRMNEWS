@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fixture — Add-customer modal</title>
+    <!--
+      Fixture for the Add-Customer / generic modal mobile fix.
+      The modal wrapper received `p-4` padding and the inner dialog
+      received `max-h-[90vh] overflow-y-auto` so tall content does
+      not push the close button off-screen on small phones.
+
+      Append ?broken=1 to drop the padding + max-height overflow so
+      the regression test can confirm the bug is reproduced.
+    -->
+    <!-- Compiled CSS is injected by the spec via page.addStyleTag. -->
+    <style>
+      html, body { margin: 0; padding: 0; }
+    </style>
+  </head>
+  <body>
+    <!-- Backdrop -->
+    <div id="modal-backdrop"
+         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+      <!-- Dialog -->
+      <div id="modal-dialog"
+           class="bg-white rounded-3xl border border-slate-100 shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between p-6 border-b border-slate-100">
+          <h2 class="text-lg font-display font-bold text-surface-900">Yangi mijoz qo'shish</h2>
+          <button id="modal-close"
+                  class="w-8 h-8 flex items-center justify-center rounded-xl text-slate-400 hover:text-surface-900 hover:bg-slate-50">
+            ×
+          </button>
+        </div>
+        <form class="p-6 space-y-4">
+          <!-- A lot of fields so the dialog is taller than a phone viewport -->
+          <label class="block"><span class="text-sm">Ism</span><input class="w-full border rounded-xl px-3 py-2" /></label>
+          <label class="block"><span class="text-sm">Familiya</span><input class="w-full border rounded-xl px-3 py-2" /></label>
+          <label class="block"><span class="text-sm">Elektron pochta</span><input class="w-full border rounded-xl px-3 py-2" /></label>
+          <label class="block"><span class="text-sm">Telefon</span><input class="w-full border rounded-xl px-3 py-2" /></label>
+          <label class="block"><span class="text-sm">Kompaniya</span><input class="w-full border rounded-xl px-3 py-2" /></label>
+          <label class="block"><span class="text-sm">Lavozim</span><input class="w-full border rounded-xl px-3 py-2" /></label>
+          <label class="block"><span class="text-sm">Manzil</span><textarea rows="3" class="w-full border rounded-xl px-3 py-2"></textarea></label>
+          <label class="block"><span class="text-sm">Sharhlar</span><textarea rows="4" class="w-full border rounded-xl px-3 py-2"></textarea></label>
+          <label class="block"><span class="text-sm">Teglar</span><input class="w-full border rounded-xl px-3 py-2" /></label>
+          <label class="block"><span class="text-sm">Status</span><input class="w-full border rounded-xl px-3 py-2" /></label>
+          <label class="block"><span class="text-sm">Ichki eslatma</span><textarea rows="3" class="w-full border rounded-xl px-3 py-2"></textarea></label>
+          <div class="flex items-center justify-end gap-2 pt-2">
+            <button type="button" class="px-4 py-2 rounded-xl border border-slate-200">Bekor qilish</button>
+            <button type="submit" id="modal-submit" class="px-4 py-2 rounded-xl bg-brand-600 text-white">Saqlash</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      const params = new URLSearchParams(location.search);
+      if (params.get('broken') === '1') {
+        // Reproduce the pre-fix modal bugs:
+        //  1. Drop the `p-4` padding on the backdrop so the dialog is
+        //     flush with the viewport edges on mobile.
+        //  2. Drop `max-h-[90vh] overflow-y-auto` from the dialog so
+        //     the long form pushes the close button off-screen.
+        const backdrop = document.getElementById('modal-backdrop');
+        backdrop.classList.remove('p-4');
+
+        const dialog = document.getElementById('modal-dialog');
+        dialog.classList.remove('max-h-[90vh]');
+        dialog.classList.remove('overflow-y-auto');
+      }
+    </script>
+  </body>
+</html>
